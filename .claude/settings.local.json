@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app:*)",
+      "Bash(npx:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:tokyo-free-black-nextjs.bloomui.com)",
+      "Bash(npm install:*)",
+      "Bash(sudo npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(rm:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)",
+      "Bash(TRELLO_API_KEY=your-key-here TRELLO_API_TOKEN=your-token-here node test-trello-connection.js)",
+      "Bash(PORT=3001 npm run dev)"
+    ],
+    "deny": []
+  }
+}

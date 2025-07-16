@@ -1,0 +1,4 @@
+Distributed Conversation Architecture with Synchronized Multi-File State Managemen
+HOW, WHEN .json files are generated and their movement in layers with updatation.
+
+
