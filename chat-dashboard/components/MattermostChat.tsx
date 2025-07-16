@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, User, Hash, AlertCircle, Search, Bell, Settings, HelpCircle, Plus, ChevronDown, Phone, Video, UserPlus, Smile, Paperclip, AtSign, Bold, Italic, Underline, Link, Code, List, MoreHorizontal, Wifi, WifiOff } from 'lucide-react';
 import { useWebSocket } from '@/contexts/WebSocketContext';
+import MattermostWebSocketManager from '@/lib/websocket-manager';
 import RichTextEditor from './RichTextEditor';
 import MessageRenderer from './MessageRenderer';
 import FileUpload from './FileUpload';
