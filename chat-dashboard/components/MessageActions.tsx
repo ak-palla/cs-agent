@@ -65,7 +65,7 @@ export default function MessageActions({
     <div className={`message-actions ${className}`}>
       <div
         ref={actionsRef}
-        className="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm px-1 py-1 space-x-1"
+        className="flex items-center bg-white border border-gray-200 rounded-md shadow-md px-1 py-1 space-x-0.5"
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
       >

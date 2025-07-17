@@ -71,11 +71,12 @@ export class MattermostWebSocketManager {
       }, timeoutMs);
       
       try {
-        // Convert HTTP URL to WebSocket URL
+        // Convert HTTP URL to WebSocket URL, preserving existing ws:// or wss://
         let wsUrl = this.config.url;
         if (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://')) {
           wsUrl = wsUrl.replace('https://', 'wss://').replace('http://', 'ws://');
         }
+        // If explicitly using ws:// (development), don't convert to wss://
         if (!wsUrl.endsWith('/api/v4/websocket')) {
           wsUrl = wsUrl.replace(/\/$/, '') + '/api/v4/websocket';
         }
@@ -99,9 +100,12 @@ export class MattermostWebSocketManager {
         
         console.log('Creating WebSocket instance...');
         try {
-          // Add authentication token as query parameter for better CORS handling
-          const authUrl = `${wsUrl}${wsUrl.includes('?') ? '&' : '?'}token=${encodeURIComponent(this.config.token)}`;
-          this.ws = new WebSocket(authUrl);
+          // Direct WebSocket connection with authentication
+          // Some Mattermost servers prefer Authorization header over query parameter
+          const authUrl = `${wsUrl}?token=${encodeURIComponent(this.config.token)}`;
+          
+          // Try with protocols for better compatibility
+          this.ws = new WebSocket(authUrl, ['mattermost.websocket']);
           console.log('WebSocket instance created, readyState:', this.ws.readyState);
         } catch (wsCreationError) {
           console.error('Failed to create WebSocket instance:', wsCreationError);
@@ -391,9 +395,35 @@ export class MattermostWebSocketManager {
     };
   }
 
-  // Static method to test WebSocket connectivity
+
+  // Helper method to test basic HTTP connectivity to the server
+  static async testHttpConnectivity(baseUrl: string): Promise<boolean> {
+    try {
+      // Convert WebSocket URL to HTTP URL for testing
+      let testUrl = baseUrl;
+      if (testUrl.startsWith('wss://')) {
+        testUrl = testUrl.replace('wss://', 'https://');
+      } else if (testUrl.startsWith('ws://')) {
+        testUrl = testUrl.replace('ws://', 'http://');
+      }
+      
+      // Remove WebSocket path and add system ping endpoint
+      testUrl = testUrl.replace('/api/v4/websocket', '').replace(/\/$/, '') + '/api/v4/system/ping';
+      
+      const response = await fetch(testUrl, { 
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache'
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  // Static method to test WebSocket connectivity with detailed error reporting
   static async testWebSocketConnection(url: string, token: string): Promise<boolean> {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       try {
         // Convert HTTP URL to WebSocket URL
         let wsUrl = url;
@@ -407,7 +437,44 @@ export class MattermostWebSocketManager {
         // Add token as query parameter
         const authUrl = `${wsUrl}${wsUrl.includes('?') ? '&' : '?'}token=${encodeURIComponent(token)}`;
         
-        const testWs = new WebSocket(authUrl);
+        const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_WEBSOCKET === 'true';
+        
+        // Test basic HTTP connectivity first
+        if (debugEnabled) {
+          console.log('🌐 Testing basic HTTP connectivity to server...');
+          const httpReachable = await this.testHttpConnectivity(url);
+          console.log('🌐 HTTP connectivity test:', httpReachable ? '✅ Reachable' : '❌ Unreachable');
+          
+          if (!httpReachable) {
+            console.log('💡 Server appears unreachable via HTTP - WebSocket will likely fail');
+          }
+        }
+        
+        if (debugEnabled) {
+          console.log('🔍 WebSocket Test Details:', {
+            originalUrl: url,
+            processedWsUrl: wsUrl,
+            finalAuthUrl: authUrl.replace(token, '***TOKEN***'),
+            tokenLength: token ? token.length : 0,
+            browserSupportsWebSocket: typeof WebSocket !== 'undefined',
+            currentLocation: typeof window !== 'undefined' ? window.location.href : 'N/A'
+          });
+        }
+        
+        // Check if WebSocket is supported
+        if (typeof WebSocket === 'undefined') {
+          if (debugEnabled) console.error('❌ WebSocket not supported in this environment');
+          return resolve(false);
+        }
+        
+        let testWs;
+        try {
+          testWs = new WebSocket(authUrl);
+          if (debugEnabled) console.log('✅ WebSocket object created successfully');
+        } catch (constructorError) {
+          if (debugEnabled) console.error('❌ Failed to create WebSocket object:', constructorError);
+          return resolve(false);
+        }
         let resolved = false;
 
         const cleanup = () => {
@@ -418,6 +485,7 @@ export class MattermostWebSocketManager {
         };
 
         testWs.onopen = () => {
+          if (debugEnabled) console.log('✅ WebSocket test connection opened successfully');
           if (!resolved) {
             resolved = true;
             testWs.close();
@@ -425,14 +493,69 @@ export class MattermostWebSocketManager {
           }
         };
 
-        testWs.onerror = () => {
+        testWs.onerror = (error) => {
+          if (debugEnabled) {
+            console.error('❌ WebSocket test connection error:', {
+              error,
+              type: error?.type,
+              target: error?.target?.readyState,
+              url: error?.target?.url,
+              protocol: error?.target?.protocol,
+              timestamp: new Date().toISOString()
+            });
+            
+            // Additional debugging based on ready state
+            const readyState = error?.target?.readyState;
+            const readyStateNames = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'];
+            console.log('🔍 WebSocket ReadyState:', readyState, readyStateNames[readyState] || 'UNKNOWN');
+          }
           if (!resolved) {
             resolved = true;
             resolve(false);
           }
         };
 
-        testWs.onclose = () => {
+        testWs.onclose = (event) => {
+          if (debugEnabled) {
+            console.log('🔒 WebSocket test connection closed:', {
+              code: event.code,
+              reason: event.reason,
+              wasClean: event.wasClean
+            });
+            
+            // Provide human-readable explanation for common close codes
+            const closeCodeExplanations: { [key: number]: string } = {
+              1000: 'Normal closure',
+              1001: 'Going away (page unload)',
+              1002: 'Protocol error',
+              1003: 'Unsupported data type',
+              1005: 'No status code (abnormal closure)',
+              1006: 'Connection closed abnormally (network issue)',
+              1007: 'Invalid data (non-UTF8)',
+              1008: 'Policy violation',
+              1009: 'Message too big',
+              1010: 'Extension not supported',
+              1011: 'Server error',
+              1012: 'Service restart',
+              1013: 'Try again later',
+              1014: 'Bad gateway',
+              1015: 'TLS handshake failure'
+            };
+            
+            const explanation = closeCodeExplanations[event.code] || 'Unknown close code';
+            console.log('🔍 Close Code Explanation:', `${event.code} - ${explanation}`);
+            
+            // Provide suggestions based on close code
+            if (event.code === 1006) {
+              console.log('💡 Suggestion: Connection closed abnormally - check network connectivity and CORS settings');
+            } else if (event.code === 1002) {
+              console.log('💡 Suggestion: Protocol error - check WebSocket URL format and server configuration');
+            } else if (event.code === 1008) {
+              console.log('💡 Suggestion: Policy violation - check authentication token and server permissions');
+            } else if (event.code === 1015) {
+              console.log('💡 Suggestion: TLS handshake failure - check SSL/TLS configuration');
+            }
+          }
           if (!resolved) {
             resolved = true;
             resolve(false);
@@ -442,13 +565,16 @@ export class MattermostWebSocketManager {
         // Timeout after 5 seconds
         setTimeout(() => {
           if (!resolved) {
+            if (debugEnabled) console.warn('⏰ WebSocket test connection timed out after 5 seconds');
             resolved = true;
             testWs.close();
             resolve(false);
           }
         }, 5000);
 
-      } catch {
+      } catch (error) {
+        const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_WEBSOCKET === 'true';
+        if (debugEnabled) console.error('💥 WebSocket test connection exception:', error);
         resolve(false);
       }
     });

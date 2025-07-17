@@ -6,6 +6,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
     const perPage = searchParams.get('perPage') || '50';
+    const before = searchParams.get('before'); // For loading older messages
+    const after = searchParams.get('after');   // For loading newer messages
     
     if (!authHeader) {
       return NextResponse.json(
@@ -23,7 +25,20 @@ export async function GET(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_MATTERMOST_URL || 'https://teams.webuildtrades.co';
     
-    const response = await fetch(`${baseUrl}/api/v4/channels/${channelId}/posts?per_page=${perPage}`, {
+    // Build query parameters for pagination
+    const queryParams = new URLSearchParams({
+      per_page: perPage
+    });
+    
+    if (before) {
+      queryParams.append('before', before);
+    }
+    
+    if (after) {
+      queryParams.append('after', after);
+    }
+    
+    const response = await fetch(`${baseUrl}/api/v4/channels/${channelId}/posts?${queryParams.toString()}`, {
       headers: {
         'Authorization': authHeader,
         'Content-Type': 'application/json',
@@ -40,7 +55,23 @@ export async function GET(request: NextRequest) {
     }
 
     const messages = await response.json();
-    return NextResponse.json(messages);
+    
+    // Add pagination metadata for the client
+    const response_headers = {
+      'X-Has-More': response.headers.get('X-Has-More') || 'false',
+      'X-Total-Count': response.headers.get('X-Total-Count') || '0'
+    };
+    
+    return NextResponse.json({
+      ...messages,
+      pagination: {
+        hasMore: response_headers['X-Has-More'] === 'true',
+        totalCount: parseInt(response_headers['X-Total-Count'], 10),
+        perPage: parseInt(perPage, 10),
+        before,
+        after
+      }
+    });
 
   } catch (error) {
     console.error('Messages API error:', error);

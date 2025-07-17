@@ -1,0 +1,38 @@
+Flock:
+
+naren@webuildtrades.com
+Flock!#13
+
+app id: 03bc24fd-6b91-4dca-a517-09f716f0e857
+app secret: 2c6d3b68-9c09-436f-b0db-8440ab5d65d9
+
+Trello:
+
+naren@webuildtrades.com
+Veryeasy!#13
+
+api key: 570e525c20a3abc0130ad515a83b0531
+secret key: 0d3bf0b33c37f6bc13e6d844129b856c658bb20b161454913cd4ea4209714baa
+token:ATTA25b7d2adc8ea82a85a9cb9d7e0891b91b92220bec6406b9e9943933f61aba899809E88B7
+
+Mattermost:
+
+Client ID: izcghiingprt7jjz976ayr9fxr
+Client Secret: yr6qgwpsmp8ytgun6uyw7srbgc
+
+https://teams.webuildtrades.co/
+
+ngrok: 2zuPCGUeORIOhQAg0kpVo4SQD7z_3jSpNUJbcUgApigy9XfnN
+
+  ngrok authtoken 2zuPCGUeORIOhQAg0kpVo4SQD7z_3jSpNUJbcUgApigy9XfnN
+
+
+Answer this question to connect to Trello for keys:
+Iframe connector URL (Required for Power-Up)
+Answer: ? eg.https://weather-power-up.netlify.com/
+Used to point to a HTML page that Trello will load onto the page as a hidden iframe and then Trello will use it to communicate with your Power-Up. Must be served over https. Only required if your Power-Up uses Power-Up capabilities. Read more about iframe connector URLs and capabilities here.
+
+Iframe connector URL (Required for Power-Up)
+https://weather-power-up.netlify.com/
+Used to point to a HTML page that Trello will load onto the page as a hidden iframe and then Trello will use it to communicate with your Power-Up. Must be served over https. Only required if your Power-Up uses Power-Up capabilities. Read more about iframe connector URLs and capabilities here.
+

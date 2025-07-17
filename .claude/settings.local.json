@@ -17,7 +17,9 @@
       "Bash(TRELLO_API_KEY=your-key-here TRELLO_API_TOKEN=your-token-here node test-trello-connection.js)",
       "Bash(PORT=3001 npm run dev)",
       "WebFetch(domain:developers.mattermost.com)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:teams.webuildtrades.co)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

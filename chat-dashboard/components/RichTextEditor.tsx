@@ -80,6 +80,7 @@ export default function RichTextEditor({
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      console.log('⌨️ Enter key pressed - submitting message');
       onSubmit();
     }
   };
@@ -295,7 +296,7 @@ export default function RichTextEditor({
             onChange={handleChange}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className="w-full min-h-[60px] max-h-40 resize-none border-none outline-none bg-transparent text-sm"
+            className="w-full min-h-[60px] max-h-40 resize-none border-none outline-none bg-transparent text-sm text-black placeholder-gray-500"
             disabled={disabled}
             style={{ lineHeight: '1.5' }}
           />

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Sidebar from "@/components/Sidebar";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -30,19 +31,21 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
         <WebSocketProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <NotificationProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
             <div className="flex h-screen">
               <Sidebar />
               <main className="flex-1 overflow-hidden">
                 {children}
               </main>
             </div>
-          </ThemeProvider>
+            </ThemeProvider>
+          </NotificationProvider>
         </WebSocketProvider>
       </body>
     </html>
