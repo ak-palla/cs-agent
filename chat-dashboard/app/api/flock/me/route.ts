@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const flockApiUrl = process.env.FLOCK_API_URL || 'https://api.flock.co/v1';
 
     // Make direct call to Flock API
-    const response = await fetch(`${flockApiUrl}/me`, {
+    const response = await fetch(`${flockApiUrl}/users.getInfo`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',

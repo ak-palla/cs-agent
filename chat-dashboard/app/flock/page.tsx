@@ -14,7 +14,7 @@ export default function FlockPage() {
   const [error, setError] = useState<string | null>(null);
   const [showTokenInput, setShowTokenInput] = useState(false);
   const [tokenInput, setTokenInput] = useState('');
-  const [showCredentialsSetup, setShowCredentialsSetup] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   // Check for stored access token on mount
   useEffect(() => {
@@ -25,42 +25,10 @@ export default function FlockPage() {
       setAccessToken(storedToken);
       setUser(JSON.parse(storedUser));
       setConnectionStatus('connected');
+    } else {
+      setShowTokenInput(true);
     }
   }, []);
-
-  const handleConnect = async () => {
-    if (!process.env.NEXT_PUBLIC_FLOCK_APP_ID) {
-      setError('Flock App ID not configured');
-      setConnectionStatus('error');
-      return;
-    }
-
-    try {
-      setIsConnecting(true);
-      setError(null);
-      setConnectionStatus('connecting');
-
-      // For FlockOS, we need to redirect to app install URL
-      const flockClient = new FlockApiClient(
-        process.env.NEXT_PUBLIC_FLOCK_APP_ID,
-        '' // App secret is only needed on server side
-      );
-
-      const redirectUri = `${window.location.origin}/flock`;
-      const installUrl = flockClient.generateInstallUrl(redirectUri);
-
-      // Show token input instead of redirecting to OAuth
-      setShowTokenInput(true);
-      setConnectionStatus('idle');
-      
-    } catch (error) {
-      console.error('Connection error:', error);
-      setError(error instanceof Error ? error.message : 'Connection failed');
-      setConnectionStatus('error');
-    } finally {
-      setIsConnecting(false);
-    }
-  };
 
   const handleTokenSubmit = async () => {
     if (!tokenInput.trim()) {
@@ -73,254 +41,284 @@ export default function FlockPage() {
     setConnectionStatus('connecting');
 
     try {
-      const flockClient = new FlockApiClient(
-        process.env.NEXT_PUBLIC_FLOCK_APP_ID!,
-        '' // App secret is only needed on server side
-      );
-      
-      flockClient.setAccessToken(tokenInput.trim());
+      // Call our auth API endpoint to validate the token
+      const response = await fetch('/api/flock/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: tokenInput.trim()
+        })
+      });
 
-      // Test the token by fetching user info
-      const user = await flockClient.getCurrentUser();
+      const data = await response.json();
 
-      if (!user) {
-        throw new Error('Invalid token or failed to fetch user info');
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}: ${data.details || 'Authentication failed'}`);
+      }
+
+      if (!data.success || !data.user) {
+        throw new Error('Invalid response from authentication server');
       }
 
       // Store credentials
-      localStorage.setItem('flock_access_token', tokenInput.trim());
-      localStorage.setItem('flock_user', JSON.stringify(user));
+      localStorage.setItem('flock_access_token', data.accessToken);
+      localStorage.setItem('flock_user', JSON.stringify(data.user));
       
-      setAccessToken(tokenInput.trim());
-      setUser(user);
+      setAccessToken(data.accessToken);
+      setUser(data.user);
       setConnectionStatus('connected');
       setShowTokenInput(false);
-      setTokenInput('');
+      setError(null);
 
     } catch (error) {
-      console.error('Token validation error:', error);
-      setError(error instanceof Error ? error.message : 'Token validation failed');
+      console.error('Authentication error:', error);
+      setError(error instanceof Error ? error.message : 'Authentication failed');
       setConnectionStatus('error');
     } finally {
       setIsConnecting(false);
     }
   };
 
-  const handleTestConnection = async () => {
-    if (!accessToken) return;
+  const handleDebugToken = async () => {
+    if (!tokenInput.trim()) {
+      setError('Please enter a token to debug');
+      return;
+    }
 
     setIsTestingConnection(true);
     setError(null);
 
     try {
-      const flockClient = new FlockApiClient(
-        process.env.NEXT_PUBLIC_FLOCK_APP_ID!,
-        '' // App secret is only needed on server side
-      );
-      
-      flockClient.setAccessToken(accessToken);
-      const isConnected = await flockClient.testConnection();
+      const response = await fetch('/api/flock/test-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: tokenInput.trim()
+        })
+      });
 
-      if (isConnected) {
-        setError(null);
-        alert('✅ Connection test successful!');
-      } else {
-        throw new Error('Connection test failed');
+      const data = await response.json();
+      setDebugInfo(data);
+
+      if (!response.ok) {
+        setError(`Debug test failed: ${data.error}`);
       }
+
     } catch (error) {
-      console.error('Connection test error:', error);
-      setError(error instanceof Error ? error.message : 'Connection test failed');
+      console.error('Debug test error:', error);
+      setError(error instanceof Error ? error.message : 'Debug test failed');
     } finally {
       setIsTestingConnection(false);
     }
   };
 
-  const handleDisconnect = () => {
+  const handleLogout = () => {
     localStorage.removeItem('flock_access_token');
     localStorage.removeItem('flock_user');
     setAccessToken(null);
     setUser(null);
     setConnectionStatus('idle');
+    setShowTokenInput(true);
     setError(null);
-    setShowTokenInput(false);
-    setTokenInput('');
+    setDebugInfo(null);
   };
 
-  // If connected, show the chat interface
-  if (connectionStatus === 'connected' && accessToken && user) {
-    return <FlockChat />;
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isConnecting) {
+      handleTokenSubmit();
+    }
+  };
+
+  // If authenticated, show the chat interface
+  if (accessToken && user && connectionStatus === 'connected') {
+    return (
+      <div className="h-screen flex flex-col">
+        {/* Header with logout option */}
+        <div className="bg-purple-600 text-white p-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold">Flock Integration</h1>
+            <p className="text-purple-200 text-sm">
+              Connected as {user.firstName} {user.lastName} • 
+              {accessToken === 'demo_token' ? 'Demo Mode • ' : ''}
+              Polling-based (no webhooks needed)
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="bg-purple-700 hover:bg-purple-800 px-4 py-2 rounded text-sm"
+          >
+            Logout
+          </button>
+        </div>
+        
+        {/* Chat Component */}
+        <div className="flex-1">
+          <FlockChat />
+        </div>
+      </div>
+    );
   }
 
+  // Show authentication form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-2xl">
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-600">
-              <svg className="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-              </svg>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Connect to Flock
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Enter your Flock bot token to start using the polling-based integration
+          </p>
+          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+            <h3 className="text-sm font-medium text-blue-900">Polling-Based Integration</h3>
+            <p className="text-xs text-blue-800 mt-1">
+              This integration uses polling instead of webhooks, so no ngrok or external URLs are needed. 
+              Your app will check for new messages every few seconds.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {error && (
+            <div className="rounded-md bg-red-50 p-4">
+              <div className="text-sm text-red-800">
+                <strong>Error:</strong> {error}
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Flock Integration</h1>
-            <p className="mt-2 text-gray-600">Connect your Flock workspace for seamless team communication</p>
+          )}
+
+          <div>
+            <label htmlFor="token" className="block text-sm font-medium text-gray-700">
+              Flock Bot Token
+            </label>
+            <div className="mt-1">
+              <input
+                id="token"
+                name="token"
+                type="password"
+                value={tokenInput}
+                onChange={(e) => setTokenInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Enter your Flock bot token (c2b0b801-9fb8-4ce8-9...)"
+                className="w-full rounded-md border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-purple-500 focus:outline-none focus:ring-purple-500"
+                disabled={isConnecting || isTestingConnection}
+              />
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Your token will be stored locally and used for API requests.
+            </p>
           </div>
 
-          <div className="rounded-lg border bg-white p-6 shadow-lg">
-            {error && (
-              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Connection Error</h3>
-                    <div className="mt-2 text-sm text-red-700">{error}</div>
-                  </div>
+          <div className="flex space-x-3">
+            <button
+              onClick={handleTokenSubmit}
+              disabled={isConnecting || isTestingConnection || !tokenInput.trim()}
+              className="flex-1 rounded-md bg-purple-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isConnecting ? (
+                <div className="flex items-center justify-center">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <span className="ml-2">Connecting...</span>
                 </div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {connectionStatus === 'connected' ? 'Connected to Flock' : 'Connect to Flock'}
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  {connectionStatus === 'connected' 
-                    ? `Signed in as ${user?.firstName} ${user?.lastName}`
-                    : 'Enter your Flock bot token to get started'
-                  }
-                </p>
-              </div>
-
-              {connectionStatus !== 'connected' && (
-                <div className="space-y-4">
-                  {!showTokenInput ? (
-                    <div className="space-y-3">
-                      <button
-                        onClick={handleConnect}
-                        disabled={isConnecting || connectionStatus === 'connecting'}
-                        className="w-full rounded-lg bg-purple-600 px-4 py-3 text-white font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                      >
-                        {isConnecting ? (
-                          <div className="flex items-center justify-center">
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Connecting...
-                          </div>
-                        ) : (
-                          'Connect with Flock'
-                        )}
-                      </button>
-
-                      <div className="text-center">
-                        <button
-                          onClick={() => setShowCredentialsSetup(!showCredentialsSetup)}
-                          className="text-sm text-purple-600 hover:text-purple-800"
-                        >
-                          Setup Instructions
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div>
-                        <label htmlFor="token" className="block text-sm font-medium text-gray-700 mb-2">
-                          Flock Bot Token
-                        </label>
-                        <input
-                          type="password"
-                          id="token"
-                          value={tokenInput}
-                          onChange={(e) => setTokenInput(e.target.value)}
-                          placeholder="Enter your Flock bot token"
-                          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-                        />
-                        <p className="mt-1 text-xs text-gray-500">
-                          Get your token from your Flock app settings
-                        </p>
-                      </div>
-
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={handleTokenSubmit}
-                          disabled={isConnecting || !tokenInput.trim()}
-                          className="flex-1 rounded-lg bg-purple-600 px-4 py-2 text-white font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                          {isConnecting ? 'Connecting...' : 'Connect'}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setShowTokenInput(false);
-                            setTokenInput('');
-                            setError(null);
-                          }}
-                          className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              ) : (
+                'Connect'
               )}
+            </button>
 
-              {connectionStatus === 'connected' && (
-                <div className="space-y-3">
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={handleTestConnection}
-                      disabled={isTestingConnection}
-                      className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-                    >
-                      {isTestingConnection ? 'Testing...' : 'Test Connection'}
-                    </button>
-                    <button
-                      onClick={handleDisconnect}
-                      className="rounded-lg border border-red-300 px-4 py-2 text-red-700 hover:bg-red-50 transition-colors"
-                    >
-                      Disconnect
-                    </button>
-                  </div>
+            <button
+              onClick={handleDebugToken}
+              disabled={isConnecting || isTestingConnection || !tokenInput.trim()}
+              className="rounded-md bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isTestingConnection ? (
+                <div className="flex items-center justify-center">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <span className="ml-2">Testing...</span>
                 </div>
+              ) : (
+                'Debug Token'
               )}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-gray-50 px-2 text-gray-500">Or</span>
+              </div>
             </div>
+          </div>
 
-            {showCredentialsSetup && (
-              <div className="mt-6 rounded-lg border bg-gray-50 p-6">
-                <h4 className="mb-4 text-lg font-semibold text-gray-900">Setup Instructions</h4>
-                <div className="space-y-4 text-sm">
-                  <div>
-                    <p className="font-medium text-gray-700">Step 1: Create a Flock Bot</p>
-                    <ol className="mt-2 list-decimal space-y-1 pl-5 text-gray-600">
-                      <li>Go to <a href="https://dev.flock.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">dev.flock.com</a></li>
-                      <li>Sign in with your Flock account</li>
-                      <li>Create a new app or bot</li>
-                      <li>Copy the bot token from your app settings</li>
-                    </ol>
-                  </div>
-                  
-                  <div>
-                    <p className="font-medium text-gray-700">Step 2: Environment Setup</p>
-                    <div className="mt-2 rounded bg-gray-100 p-3 font-mono text-xs">
-                      <div>NEXT_PUBLIC_FLOCK_APP_ID={process.env.NEXT_PUBLIC_FLOCK_APP_ID || 'your_app_id'}</div>
-                      <div>FLOCK_APP_SECRET=*** (configured server-side)</div>
+          <button
+            onClick={() => {
+              // Set up mock authentication
+              const mockUser = {
+                id: 'demo_user',
+                firstName: 'Demo',
+                lastName: 'User',
+                email: 'demo@example.com',
+                username: 'demo_user'
+              };
+              
+              localStorage.setItem('flock_access_token', 'demo_token');
+              localStorage.setItem('flock_user', JSON.stringify(mockUser));
+              
+              setAccessToken('demo_token');
+              setUser(mockUser);
+              setConnectionStatus('connected');
+              setShowTokenInput(false);
+              setError(null);
+            }}
+            className="w-full rounded-md bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          >
+            Try Demo Mode (No Token Required)
+          </button>
+
+          {debugInfo && (
+            <div className="mt-6 rounded-md bg-gray-50 p-4">
+              <h3 className="text-sm font-medium text-gray-900 mb-2">Debug Results</h3>
+              <div className="text-xs text-gray-600 space-y-2">
+                <div>
+                  <strong>Token Info:</strong> Length {debugInfo.tokenInfo?.length}, Pattern: {debugInfo.tokenInfo?.pattern}
+                </div>
+                <div className="space-y-1">
+                  <strong>API Test Results:</strong>
+                  {debugInfo.results?.map((result: any, index: number) => (
+                    <div key={index} className="ml-2">
+                      <div className="font-mono text-xs">
+                        {result.endpoint}: 
+                        <span className={result.status === 200 ? 'text-green-600' : 'text-red-600'}>
+                          {' '}{result.status || 'Error'} {result.statusText || result.error}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div>
-                    <p className="font-medium text-gray-700">Step 3: Install Bot to Team</p>
-                    <p className="mt-1 text-gray-600">
-                      Install your bot to your Flock team and get the bot token for authentication.
-                    </p>
-                  </div>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
+          )}
+
+          <div className="mt-6 text-center">
+            <div className="text-sm text-gray-600">
+              <p className="mb-2">
+                <strong>How to get your Flock bot token:</strong>
+              </p>
+              <ol className="text-left text-xs space-y-1 list-decimal list-inside">
+                <li>Go to your Flock admin panel</li>
+                <li>Navigate to Apps & Integrations</li>
+                <li>Create a new bot or select existing bot</li>
+                <li>Copy the bot token from the settings</li>
+                <li>Paste it above and click Connect</li>
+              </ol>
+            </div>
           </div>
         </div>
       </div>

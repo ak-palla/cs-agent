@@ -20,10 +20,10 @@ export async function GET(request: NextRequest) {
     const accessToken = authHeader.replace('Bearer ', '');
     const flockApiUrl = process.env.FLOCK_API_URL || 'https://api.flock.co/v1';
 
-    // Build URL for channels API call
+    // Build URL for channels API call - Flock uses groups.list for channels
     const channelsUrl = teamId 
-      ? `${flockApiUrl}/channels?teamId=${teamId}`
-      : `${flockApiUrl}/channels`;
+      ? `${flockApiUrl}/groups.list?teamId=${teamId}`
+      : `${flockApiUrl}/groups.list`;
 
     // Call Flock API to get channels
     const response = await fetch(channelsUrl, {

@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     const accessToken = authHeader.replace('Bearer ', '');
     const flockApiUrl = process.env.FLOCK_API_URL || 'https://api.flock.co/v1';
 
-    // Call Flock API to get teams
-    const response = await fetch(`${flockApiUrl}/teams`, {
+    // Call Flock API to get teams - Flock uses teams.list
+    const response = await fetch(`${flockApiUrl}/teams.list`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',

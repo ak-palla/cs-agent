@@ -19,7 +19,11 @@
       "WebFetch(domain:developers.mattermost.com)",
       "Bash(curl:*)",
       "WebFetch(domain:teams.webuildtrades.co)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "WebFetch(domain:docs.flock.com)",
+      "WebFetch(domain:dev.flock.com)",
+      "Bash(pkill:*)",
+      "Bash(true)"
     ],
     "deny": []
   }
