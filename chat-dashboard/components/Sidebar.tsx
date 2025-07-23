@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, MessageSquare, LayoutGrid, Users } from 'lucide-react';
+import { MessageSquare, LayoutGrid, Users, Shield } from 'lucide-react';
 
 const navigation = [
-  { name: 'Home', href: '/', icon: Home },
+  { name: 'Admin Dashboard', href: '/', icon: Shield },
   { name: 'Mattermost', href: '/mattermost', icon: MessageSquare },
   { name: 'Trello', href: '/trello', icon: LayoutGrid },
   { name: 'Flock', href: '/flock', icon: Users },
@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   return (
     <div className="flex h-full w-16 flex-col items-center space-y-4 bg-gray-900 py-4">
-      {navigation.map((item) => {
+        {navigation.map((item) => {
         const isActive = pathname === item.href || 
           (item.href !== '/' && pathname.startsWith(item.href));
         

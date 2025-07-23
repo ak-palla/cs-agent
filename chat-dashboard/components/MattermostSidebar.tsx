@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Hash, Plus, ChevronDown } from 'lucide-react';
+import { Search, Hash, Plus, ChevronDown, Shield } from 'lucide-react';
 
 interface Channel {
   id: string;
@@ -16,6 +16,7 @@ interface MattermostSidebarProps {
   directMessages: Channel[];
   currentChannel: string;
   onChannelSelect: (channelId: string) => void;
+  onAdminDashboard?: () => void;
 }
 
 /**
@@ -34,7 +35,8 @@ export default function MattermostSidebar({
   channels, 
   directMessages, 
   currentChannel, 
-  onChannelSelect 
+  onChannelSelect,
+  onAdminDashboard
 }: MattermostSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -152,6 +154,22 @@ export default function MattermostSidebar({
             ))}
           </div>
         </div>
+
+        {/* Admin Dashboard */}
+        {onAdminDashboard && (
+          <div className="px-2 py-2 border-t border-gray-600">
+            <button 
+              onClick={onAdminDashboard}
+              className="w-full text-left px-3 py-1.5 rounded text-sm text-gray-400 hover:bg-blue-600 hover:text-white flex items-center transition-colors group"
+              title="Open Admin Dashboard"
+            >
+              <div className="flex items-center justify-center w-4 h-4 mr-2">
+                <Shield className="h-4 w-4 group-hover:text-white" />
+              </div>
+              <span className="font-medium">Admin Dashboard</span>
+            </button>
+          </div>
+        )}
 
         {/* Invite Members */}
         <div className="px-2 py-2 border-t border-gray-600 mt-auto">

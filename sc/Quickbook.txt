@@ -1,0 +1,13 @@
+Quickbook:
+
+Also refer this link: https://github.com/apigrate/quickbooks
+https://developer.intuit.com/app/developer/qbo/docs/develop
+
+Servicem8:
+
+https://developer.servicem8.com/docs/getting-started
+https://rollout.com/integration-guides/service-m8/sdk/step-by-step-guide-to-building-a-service-m8-api-integration-in-python
+
+
+I need to capture data from Quickbook using their API:
+

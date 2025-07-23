@@ -73,7 +73,16 @@ export class MattermostWebSocketManager {
       try {
         // Convert HTTP URL to WebSocket URL, preserving existing ws:// or wss://
         let wsUrl = this.config.url;
-        if (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://')) {
+        // --- PATCH: Use window.location.protocol to determine ws/wss ---
+        if (typeof window !== 'undefined' && !wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://')) {
+          if (window.location.protocol === 'https:') {
+            wsUrl = wsUrl.replace('http://', 'https://').replace('ws://', 'wss://').replace('http://', 'https://');
+            wsUrl = wsUrl.replace('https://', 'wss://');
+          } else {
+            wsUrl = wsUrl.replace('https://', 'http://').replace('wss://', 'ws://').replace('https://', 'http://');
+            wsUrl = wsUrl.replace('http://', 'ws://');
+          }
+        } else if (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://')) {
           wsUrl = wsUrl.replace('https://', 'wss://').replace('http://', 'ws://');
         }
         // If explicitly using ws:// (development), don't convert to wss://
@@ -173,14 +182,22 @@ export class MattermostWebSocketManager {
         };
 
         this.ws.onerror = (error) => {
-          console.error('WebSocket error details:', {
-            error,
-            url: wsUrl,
-            readyState: this.ws?.readyState,
-            timestamp: new Date().toISOString(),
-            userAgent: navigator.userAgent,
-            origin: window.location.origin
-          });
+          // --- PATCH: Improved error logging ---
+          let errorDetails = {};
+          if (error && typeof error === 'object') {
+            errorDetails = {
+              type: error.type,
+              message: error.message,
+              target: error.target,
+              currentUrl: window?.location?.href,
+              wsReadyState: this.ws?.readyState,
+              wsUrl: wsUrl,
+              timestamp: new Date().toISOString(),
+              userAgent: navigator.userAgent,
+              origin: window.location.origin
+            };
+          }
+          console.error('WebSocket error details:', errorDetails);
           clearTimeout(connectionTimeout);
           this.config.onError?.(error);
           
@@ -442,7 +459,7 @@ export class MattermostWebSocketManager {
         // Test basic HTTP connectivity first
         if (debugEnabled) {
           console.log('🌐 Testing basic HTTP connectivity to server...');
-          const httpReachable = await this.testHttpConnectivity(url);
+          const httpReachable = await MattermostWebSocketManager.testHttpConnectivity(url);
           console.log('🌐 HTTP connectivity test:', httpReachable ? '✅ Reachable' : '❌ Unreachable');
           
           if (!httpReachable) {

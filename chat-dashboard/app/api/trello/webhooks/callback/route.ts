@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { serverActivityProcessor } from '@/lib/server-activity-processor';
 
 /**
  * POST /api/trello/webhooks/callback
@@ -109,13 +110,23 @@ async function processWebhookAction(webhookData: any) {
     model
   };
 
-  // Here you would typically:
-  // 1. Store the event in a database
-  // 2. Broadcast the event to connected WebSocket clients
-  // 3. Update cached data
-  // 4. Trigger notifications
+  // Store the event in Supabase using ServerActivityProcessor
+  await serverActivityProcessor.storeActivity({
+    platform: 'trello',
+    event_type: actionType,
+    user_id: memberCreator?.id,
+    channel_id: modelType === 'board' ? modelId : action.data?.board?.id,
+    data: {
+      action_id: action.id,
+      model_type: modelType,
+      model_id: modelId,
+      member_creator: memberCreator,
+      action_data: action.data,
+      model_data: model,
+      date: date
+    }
+  });
 
-  // For now, we'll just log the processed event
   console.log('Processed Trello webhook event:', {
     type: actionType,
     model: `${modelType}:${modelId}`,

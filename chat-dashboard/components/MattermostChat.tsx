@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, User, Hash, AlertCircle, Search, Bell, Settings, HelpCircle, Plus, ChevronDown, Phone, Video, UserPlus, Smile, Paperclip, MoreHorizontal, Wifi, WifiOff } from 'lucide-react';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import MattermostWebSocketManager from '@/lib/websocket-manager';
+import EnhancedWebSocketManager, { EnhancedWebSocketManagerStatic } from '@/lib/enhanced-websocket-manager';
 import RichTextEditor from './RichTextEditor';
 import MessageRenderer from './MessageRenderer';
 import FileUpload from './FileUpload';
@@ -233,7 +234,7 @@ export default function MattermostChat() {
             try {
               console.log('🧪 Testing WebSocket connectivity...');
               // Test WebSocket connectivity
-              const webSocketAvailable = await MattermostWebSocketManager.testWebSocketConnection(wsUrl, existingToken);
+              const webSocketAvailable = await EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, existingToken);
               console.log('🧪 WebSocket test result:', webSocketAvailable ? '✅ Available' : '❌ Not Available');
               
               if (webSocketAvailable) {
@@ -247,7 +248,7 @@ export default function MattermostChat() {
                 console.warn('⚠️ WebSocket test failed - falling back to polling mode');
                 
                 // Diagnose potential issues
-                const diagnostic = checkWebSocketIssues();
+                const diagnostic = checkWebSocketIssues(wsUrl);
                 if (diagnostic.hasIssues) {
                   console.log('🔍 Potential WebSocket Issues Detected:');
                   diagnostic.issues.forEach(issue => console.log('   ' + issue));
@@ -1446,7 +1447,7 @@ export default function MattermostChat() {
     : [];
 
   // Check for CORS and WebSocket configuration issues
-  const checkWebSocketIssues = () => {
+  const checkWebSocketIssues = (wsUrl: string) => {
     const isLocalhost = window.location.hostname === 'localhost' || 
                        window.location.hostname === '127.0.0.1' ||
                        window.location.hostname.includes('192.168.');
@@ -1543,7 +1544,7 @@ export default function MattermostChat() {
         
         if (websocketEnabled) {
           try {
-            const webSocketAvailable = await MattermostWebSocketManager.testWebSocketConnection(wsUrl, userToken);
+            const webSocketAvailable = await EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, userToken);
             if (debugEnabled) console.log('WebSocket connectivity test:', webSocketAvailable);
             
             if (webSocketAvailable) {
@@ -1572,7 +1573,10 @@ export default function MattermostChat() {
         console.error('Authentication failed:', err);
         
         // Check for specific WebSocket and configuration errors
-        const diagnostic = checkWebSocketIssues();
+        const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+          ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
+          : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+        const diagnostic = checkWebSocketIssues(wsUrl);
         if (diagnostic.hasIssues || (err instanceof Error && err.message.includes('CORS'))) {
           const corsMessage = diagnostic.issues.length > 0 ? diagnostic.issues.join('. ') : 'The Mattermost server needs CORS configuration for localhost development.';
           setError(`WebSocket connection failed. ${corsMessage} You can continue using the app in polling mode.`);
@@ -1798,7 +1802,10 @@ export default function MattermostChat() {
               });
               
               // Run WebSocket diagnostics
-              const diagnostic = checkWebSocketIssues();
+              const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+                ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
+                : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+              const diagnostic = checkWebSocketIssues(wsUrl);
               if (diagnostic.hasIssues) {
                 console.log('⚠️ Potential Issues:');
                 diagnostic.issues.forEach(issue => console.log('   ' + issue));
@@ -1814,7 +1821,7 @@ export default function MattermostChat() {
                 const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
                   ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
                   : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
-                MattermostWebSocketManager.testWebSocketConnection(wsUrl, token)
+                EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, token)
                   .then(result => {
                     console.log('🧪 Manual WebSocket test result:', result ? '✅ Success' : '❌ Failed');
                   })
@@ -2593,6 +2600,7 @@ export default function MattermostChat() {
         isOpen={showNotificationSettings}
         onClose={() => setShowNotificationSettings(false)}
       />
+      
     </div>
   );
 }
