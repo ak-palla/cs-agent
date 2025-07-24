@@ -1,0 +1,885 @@
+main-app.js?v=1753342622390:1126 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+D:\CS_Agent\chat-dashboard\lib\logger.ts:68 [2025-07-24T07:37:04.419Z] [INFO] [MATTERMOST] Checking existing authentication status 
+D:\CS_Agent\chat-dashboard\lib\logger.ts:68 [2025-07-24T07:37:04.420Z] [INFO] [MATTERMOST] Found existing authentication {userId: '5ympta6sf38npgkp1oqn67tkhw', username: 'akhilpalla'}
+content_script.js:2726 [tiptap warn]: Duplicate extension names found: ['link', 'dropCursor', 'codeBlock', 'image']. This can lead to issues.
+e.<computed> @ content_script.js:2726
+resolve @ content_script_sidebar.js:628
+B @ content_script_sidebar.js:628
+createExtensionManager @ content_script_sidebar.js:628
+t.Editor @ content_script_sidebar.js:628
+g @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:747
+Dl @ content_script_sidebar.js:3018
+t.unstable_runWithPriority @ content_script_sidebar.js:3018
+Fi @ content_script_sidebar.js:3018
+_l @ content_script_sidebar.js:3018
+pl @ content_script_sidebar.js:3018
+(anonymous) @ content_script_sidebar.js:3018
+t.unstable_runWithPriority @ content_script_sidebar.js:3018
+Fi @ content_script_sidebar.js:3018
+Ui @ content_script_sidebar.js:3018
+qi @ content_script_sidebar.js:3018
+sl @ content_script_sidebar.js:3018
+enqueueSetState @ content_script_sidebar.js:3018
+g.setState @ content_script_sidebar.js:3018
+processMutation @ content_script_sidebar.js:1074
+(anonymous) @ content_script_sidebar.js:1074
+s.emit @ content_script_sidebar.js:747
+emitMutation @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:747
+a @ content_script_sidebar.js:2
+Promise.then
+l @ content_script_sidebar.js:2
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+c @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:3360
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+Y.init @ content_script_sidebar.js:3360
+(anonymous) @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+processUIEvent @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+processUIEvent @ content_script_sidebar.js:747
+(anonymous) @ content_script_sidebar.js:1074
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+processEvent @ content_script_sidebar.js:1074
+(anonymous) @ content_script_sidebar.js:1074
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+componentDidMount @ content_script_sidebar.js:1074
+(anonymous) @ content_script_sidebar.js:4490
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+componentDidMount @ content_script_sidebar.js:4490
+us @ content_script_sidebar.js:3018
+Al @ content_script_sidebar.js:3018
+t.unstable_runWithPriority @ content_script_sidebar.js:3018
+Fi @ content_script_sidebar.js:3018
+Cl @ content_script_sidebar.js:3018
+pl @ content_script_sidebar.js:3018
+(anonymous) @ content_script_sidebar.js:3018
+t.unstable_runWithPriority @ content_script_sidebar.js:3018
+Fi @ content_script_sidebar.js:3018
+Ui @ content_script_sidebar.js:3018
+qi @ content_script_sidebar.js:3018
+sl @ content_script_sidebar.js:3018
+enqueueSetState @ content_script_sidebar.js:3018
+g.setState @ content_script_sidebar.js:3018
+(anonymous) @ content_script_sidebar.js:4490
+a @ content_script_sidebar.js:2
+Promise.then
+l @ content_script_sidebar.js:2
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+componentDidMount @ content_script_sidebar.js:4490
+us @ content_script_sidebar.js:3018
+Al @ content_script_sidebar.js:3018
+t.unstable_runWithPriority @ content_script_sidebar.js:3018
+Fi @ content_script_sidebar.js:3018
+Cl @ content_script_sidebar.js:3018
+pl @ content_script_sidebar.js:3018
+sl @ content_script_sidebar.js:3018
+Vl @ content_script_sidebar.js:3018
+(anonymous) @ content_script_sidebar.js:3018
+fl @ content_script_sidebar.js:3018
+Ql @ content_script_sidebar.js:3018
+t.render @ content_script_sidebar.js:3018
+(anonymous) @ content_script_sidebar.js:4490
+(anonymous) @ content_script_sidebar.js:4490
+a @ content_script_sidebar.js:2
+Promise.then
+l @ content_script_sidebar.js:2
+(anonymous) @ content_script_sidebar.js:2
+u @ content_script_sidebar.js:2
+c @ content_script_sidebar.js:4490
+(anonymous) @ content_script_sidebar.js:4490
+s.emit @ content_script.js:747
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+reloadComponent @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+reloadRibbon @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+handleHistoryStateUpdate @ content_script.js:2726
+handleHistoryStateUpdate @ content_script.js:411
+(anonymous) @ content_script.js:411
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+d @ content_script.js:411
+messageResponder @ content_script.js:411
+onMessage @ browser-polyfill.js:1079
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:603 🔄 Starting global notification polling for 200 channels (default mode)
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:305 🚀 Starting connection process (WebSocket default mode)...
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:307 🔧 Connection Configuration: {wsUrl: 'wss://teams.webuildtrades.co', websocketEnabled: true, baseUrl: 'https://teams.webuildtrades.co', isLocalhost: true, tokenPresent: true, …}
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:323 🏠 Running on localhost - skipping WebSocket test and using polling mode (avoids CORS)
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:522 🔄 Polling messages for channel: 4ago6dngfingxg5rzfn1z4gnjc
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\contexts\NotificationContext.tsx:143 📨 Added notification: {id: '1753342639981uyf9nn2fz', timestamp: 1753342639981, type: 'message', channel: 'EVERGREEN ECO SOLUTIONS', user: 'Hitesh Vishwakarma'}
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:701 📨 Global polling found 1 new messages in EVERGREEN ECO SOLUTIONS
+D:\CS_Agent\chat-dashboard\contexts\NotificationContext.tsx:280 Could not play notification sound: NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:721 🛑 Stopped global notification polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:603 🔄 Starting global notification polling for 200 channels (default mode)
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:701 📨 Global polling found 1 new messages in AI Team
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:701 📨 Global polling found 1 new messages in AI Team
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:701 📨 Global polling found 1 new messages in AI Team
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+content_script.js:2726 m: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received
+    at wrappedSendMessageCallback (chrome-extension://abkfbakhjpmblaafnpgjppbmioombali/lib/browser-polyfill.js:1143:20)
+e.<computed> @ content_script.js:2726
+(anonymous) @ content_script_sidebar.js:555
+s @ content_script_sidebar.js:2
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:522 🔄 Polling messages for channel: 4ago6dngfingxg5rzfn1z4gnjc
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:522 🔄 Polling messages for channel: 4ago6dngfingxg5rzfn1z4gnjc
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:580 📨 Polling update: fetched 9 messages, 9 new
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:576 📨 Current channel polling found 9 new messages - notifications handled by global polling
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:531 📡 Polling response status: 200 OK
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted
+D:\CS_Agent\chat-dashboard\components\MattermostChat.tsx:25 ✅ Activity stored successfully: message_posted

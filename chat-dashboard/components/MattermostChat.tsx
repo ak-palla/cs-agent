@@ -3,8 +3,85 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, User, Hash, AlertCircle, Search, Bell, Settings, HelpCircle, Plus, ChevronDown, Phone, Video, UserPlus, Smile, Paperclip, MoreHorizontal, Wifi, WifiOff } from 'lucide-react';
 import { useWebSocket } from '@/contexts/WebSocketContext';
-import MattermostWebSocketManager from '@/lib/websocket-manager';
-import EnhancedWebSocketManager, { EnhancedWebSocketManagerStatic } from '@/lib/enhanced-websocket-manager';
+import EnhancedMattermostClient from '@/lib/enhanced-mattermost-client';
+import { mattermostLogger } from '@/lib/logger';
+
+// Helper function for activity storage with retry logic and exponential backoff
+async function storeActivitySafely(activityData: any): Promise<boolean> {
+  const maxRetries = 3;
+  const baseDelay = 1000; // 1 second base delay
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch('/api/admin/activities/store', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activityData)
+      });
+      
+      if (response.ok) {
+        console.log('✅ Activity stored successfully:', activityData.event_type);
+        return true;
+      }
+      
+      // Handle different error types
+      if (response.status >= 500) {
+        // Server error - retry with exponential backoff
+        if (attempt < maxRetries) {
+          const delay = baseDelay * Math.pow(2, attempt - 1);
+          console.warn(`🔄 Server error (${response.status}), retrying in ${delay}ms... (attempt ${attempt}/${maxRetries})`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+      } else if (response.status >= 400) {
+        // Client error - don't retry, log and return false
+        console.warn('❌ Client error storing activity:', response.status, response.statusText);
+        return false;
+      }
+      
+    } catch (error) {
+      // Network error - retry with exponential backoff
+      if (attempt < maxRetries) {
+        const delay = baseDelay * Math.pow(2, attempt - 1);
+        console.warn(`🔄 Network error, retrying in ${delay}ms... (attempt ${attempt}/${maxRetries})`, error);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      console.error('❌ Failed to store activity after all retries:', error);
+    }
+  }
+  
+  // All retries exhausted
+  console.warn('⚠️ Activity storage failed after', maxRetries, 'attempts - continuing without storage');
+  return false;
+}
+
+// WebSocket connection test function
+async function testWebSocketConnection(wsUrl: string, token: string): Promise<boolean> {
+  try {
+    // Test WebSocket connectivity by using the proxy API route instead of direct calls
+    // This avoids CORS issues since we're calling our own Next.js API
+    const response = await fetch('/api/mattermost/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      mattermostLogger.debug('WebSocket connectivity test successful via proxy');
+      return true;
+    } else {
+      mattermostLogger.debug('WebSocket connectivity test failed', { status: response.status });
+      return false;
+    }
+  } catch (error) {
+    mattermostLogger.debug('WebSocket test failed', { error });
+    return false;
+  }
+}
 import RichTextEditor from './RichTextEditor';
 import MessageRenderer from './MessageRenderer';
 import FileUpload from './FileUpload';
@@ -196,11 +273,18 @@ export default function MattermostChat() {
       // Auto-connect with existing token
       const initializeConnection = async () => {
         try {
-                  // Fetch current user and teams first
-        const [_, teamsData] = await Promise.all([
-          fetchCurrentUser(existingToken),
-          fetchTeams(existingToken)
-        ]);
+          // First validate the token
+          const isValidToken = await validateToken(existingToken);
+          if (!isValidToken) {
+            console.warn('Token validation failed, clearing stored token');
+            return;
+          }
+
+          // Fetch current user and teams first
+          const [_, teamsData] = await Promise.all([
+            fetchCurrentUser(existingToken),
+            fetchTeams(existingToken)
+          ]);
         
         // Then fetch users and channels (use first team if available)
         const teamId = teamsData.length > 0 ? teamsData[0].id : null;
@@ -215,7 +299,7 @@ export default function MattermostChat() {
           // Determine WebSocket URL based on hostname to avoid mixed content issues
           const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
             ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
-            : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+            : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl.replace('https://', 'wss://').replace('http://', 'ws://');
 
           // Attempt WebSocket connection first (default mode)
           console.log('🚀 Starting connection process (WebSocket default mode)...');
@@ -231,21 +315,29 @@ export default function MattermostChat() {
           }
           
           if (websocketEnabled) {
-            try {
-              console.log('🧪 Testing WebSocket connectivity...');
-              // Test WebSocket connectivity
-              const webSocketAvailable = await EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, existingToken);
-              console.log('🧪 WebSocket test result:', webSocketAvailable ? '✅ Available' : '❌ Not Available');
-              
-              if (webSocketAvailable) {
-                // WebSocket is available - use it as primary mode
-                console.log('🔗 Establishing WebSocket connection...');
-                await connectWebSocket(wsUrl, existingToken);
-                setPollingMode(false);
-                console.log('✅ WebSocket connected successfully (real-time mode active)');
-              } else {
-                // WebSocket failed - fallback to polling
-                console.warn('⚠️ WebSocket test failed - falling back to polling mode');
+            // Skip WebSocket connectivity test on localhost to avoid CORS issues
+            // API polling is working fine, so use that as the primary mode for localhost
+            const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+            
+            if (isLocalhost) {
+              console.log('🏠 Running on localhost - skipping WebSocket test and using polling mode (avoids CORS)');
+              setPollingMode(true);
+            } else {
+              try {
+                console.log('🧪 Testing WebSocket connectivity...');
+                // Test WebSocket connectivity
+                const webSocketAvailable = await testWebSocketConnection(wsUrl, existingToken);
+                console.log('🧪 WebSocket test result:', webSocketAvailable ? '✅ Available' : '❌ Not Available');
+                
+                if (webSocketAvailable) {
+                  // WebSocket is available - use it as primary mode
+                  console.log('🔗 Establishing WebSocket connection...');
+                  await connectWebSocket(wsUrl, existingToken);
+                  setPollingMode(false);
+                  console.log('✅ WebSocket connected successfully (real-time mode active)');
+                } else {
+                  // WebSocket failed - fallback to polling
+                  console.warn('⚠️ WebSocket test failed - falling back to polling mode');
                 
                 // Diagnose potential issues
                 const diagnostic = checkWebSocketIssues(wsUrl);
@@ -267,6 +359,7 @@ export default function MattermostChat() {
                 stack: wsError instanceof Error ? wsError.stack : undefined
               });
               setPollingMode(true);
+            }
             }
           } else {
             // WebSocket explicitly disabled - use polling
@@ -417,11 +510,16 @@ export default function MattermostChat() {
     // Always use polling for current channel messages
     if (!token || !currentChannel) return;
 
-    if (debugEnabled) console.log('🔄 Starting current channel polling for:', currentChannel, 'interval:', pollingIntervalMs + 'ms');
+    // Only log polling start once per channel to reduce console noise
+    if (debugEnabled && !localStorage.getItem(`polling_logged_${currentChannel}`)) {
+      console.log('🔄 Starting current channel polling for:', currentChannel, 'interval:', pollingIntervalMs + 'ms');
+      localStorage.setItem(`polling_logged_${currentChannel}`, 'true');
+    }
 
     const pollMessages = async () => {
       try {
-        if (debugEnabled) console.log('🔄 Polling messages for channel:', currentChannel);
+        // Reduce polling message frequency - only log occasionally
+        if (debugEnabled && Math.random() < 0.05) console.log('🔄 Polling messages for channel:', currentChannel);
         
         const response = await fetch(`/api/mattermost/channels/${currentChannel}/posts`, {
           headers: {
@@ -429,7 +527,8 @@ export default function MattermostChat() {
           }
         });
         
-        if (debugEnabled) console.log('📡 Polling response status:', response.status, response.statusText);
+        // Only log polling status occasionally to reduce console noise
+        if (debugEnabled && Math.random() < 0.1) console.log('📡 Polling response status:', response.status, response.statusText);
         
         if (response.ok) {
           const data = await response.json();
@@ -446,13 +545,39 @@ export default function MattermostChat() {
           const existingMessageIds = new Set(messages.map(msg => msg.id));
           const newMessages = latestMessages.filter(msg => !existingMessageIds.has(msg.id));
           
+          // Store activities for new messages (since WebSocket is disabled in localhost)
+          for (const message of newMessages) {
+            const success = await storeActivitySafely({
+              platform: 'mattermost',
+              event_type: 'message_posted',
+              user_id: message.user_id,
+              channel_id: message.channel_id,
+              data: {
+                message_id: message.id,
+                message: message.message,
+                type: message.type,
+                props: message.props,
+                root_id: message.root_id,
+                parent_id: message.parent_id,
+                create_at: message.create_at,
+                update_at: message.update_at,
+                source: 'polling'
+              },
+              timestamp: new Date(message.create_at).toISOString()
+            });
+            
+            if (!success) {
+              break; // Stop trying if activity storage is disabled
+            }
+          }
+          
           // Current channel notifications are handled by global polling to avoid duplicates
-          if (debugEnabled && newMessages.length > 0) {
+          if (debugEnabled && newMessages.length > 0 && Math.random() < 0.2) {
             console.log('📨 Current channel polling found', newMessages.length, 'new messages - notifications handled by global polling');
           }
           
           setMessages(latestMessages);
-          if (debugEnabled) console.log('📨 Polling update: fetched', latestMessages.length, 'messages,', newMessages.length, 'new');
+          if (debugEnabled && newMessages.length > 0 && Math.random() < 0.1) console.log('📨 Polling update: fetched', latestMessages.length, 'messages,', newMessages.length, 'new');
         }
       } catch (error) {
         console.warn('⚠️ Polling failed:', error);
@@ -508,6 +633,32 @@ export default function MattermostChat() {
               const newMessages = lastKnownTimestamp 
                 ? channelMessages.filter(msg => msg.create_at > parseInt(lastKnownTimestamp))
                 : []; // Don't show any messages on first poll to avoid spam
+              
+              // Store activities for new messages (since WebSocket is disabled in localhost)
+              for (const message of newMessages) {
+                const success = await storeActivitySafely({
+                  platform: 'mattermost',
+                  event_type: 'message_posted',
+                  user_id: message.user_id,
+                  channel_id: message.channel_id,
+                  data: {
+                    message_id: message.id,
+                    message: message.message,
+                    type: message.type,
+                    props: message.props,
+                    root_id: message.root_id,
+                    parent_id: message.parent_id,
+                    create_at: message.create_at,
+                    update_at: message.update_at,
+                    source: 'global_polling'
+                  },
+                  timestamp: new Date(message.create_at).toISOString()
+                });
+                
+                if (!success) {
+                  break; // Stop trying if activity storage is disabled
+                }
+              }
               
               // Create notifications for new messages
               newMessages.forEach(newMessage => {
@@ -1074,6 +1225,21 @@ export default function MattermostChat() {
       const result = await response.json();
       console.log('✅ Message sent successfully:', result);
 
+      // Store activity for sent message (since WebSocket is disabled in localhost)
+      await storeActivitySafely({
+        platform: 'mattermost',
+        event_type: 'message_posted',
+        user_id: currentUser?.id,
+        channel_id: currentChannel,
+        data: {
+          message_id: result.id,
+          message: messageData.message,
+          file_ids: messageData.file_ids || [],
+          source: 'sent_message'
+        },
+        timestamp: new Date().toISOString()
+      });
+
       // Clear form only after successful send
       setNewMessage('');
       setUploadedFiles([]);
@@ -1108,8 +1274,16 @@ export default function MattermostChat() {
         },
       });
 
+      if (response.status === 401) {
+        console.warn('Authentication failed - invalid token in fetchDirectMessages');
+        localStorage.removeItem('mattermost_token');
+        setToken('');
+        setError('Authentication failed. Please check your Personal Access Token');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch direct messages');
+        throw new Error(`Failed to fetch direct messages: ${response.status}`);
       }
 
       const dmChannels = await response.json();
@@ -1143,6 +1317,7 @@ export default function MattermostChat() {
       setDirectMessages(enhancedDMChannels);
     } catch (err) {
       console.error('Failed to fetch direct messages:', err);
+      setError('Failed to load direct messages. Please check your connection.');
     }
   }, [currentUser, users]);
 
@@ -1192,8 +1367,16 @@ export default function MattermostChat() {
         },
       });
 
+      if (response.status === 401) {
+        console.warn('Authentication failed - invalid token in fetchUsers');
+        localStorage.removeItem('mattermost_token');
+        setToken('');
+        setError('Authentication failed. Please check your Personal Access Token');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch users');
+        throw new Error(`Failed to fetch users: ${response.status}`);
       }
 
       const usersData = await response.json();
@@ -1207,6 +1390,7 @@ export default function MattermostChat() {
       setUsersMap(userMap);
     } catch (err) {
       console.error('Failed to fetch users:', err);
+      setError('Failed to load users. Please check your connection.');
     }
   }, []);
 
@@ -1252,9 +1436,30 @@ export default function MattermostChat() {
     }
   }, [token, currentUser]);
 
+  const switchToChannel = async (channelId: string) => {
+    if (channelId !== currentChannel) {
+      const previousChannel = currentChannel;
+      setCurrentChannel(channelId);
+      
+      // Store channel switch activity
+      await storeActivitySafely({
+        platform: 'mattermost',
+        event_type: 'channel_switched',
+        user_id: currentUser?.id,
+        channel_id: channelId,
+        data: {
+          previous_channel_id: previousChannel,
+          new_channel_id: channelId,
+          source: 'manual_switch'
+        },
+        timestamp: new Date().toISOString()
+      });
+    }
+  };
+
   const handleChannelCreated = (newChannel: Channel) => {
     setChannels(prev => [...prev, newChannel]);
-    setCurrentChannel(newChannel.id);
+    switchToChannel(newChannel.id);
     setShowChannelManager(false);
   };
 
@@ -1345,6 +1550,30 @@ export default function MattermostChat() {
     }
   };
 
+  const validateToken = useCallback(async (authToken: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/mattermost/me', {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 401) {
+        console.warn('Token is invalid or expired');
+        localStorage.removeItem('mattermost_token');
+        setToken('');
+        setError('Token expired. Please enter a new Personal Access Token');
+        return false;
+      }
+
+      return response.ok;
+    } catch (err) {
+      console.error('Token validation failed:', err);
+      return false;
+    }
+  }, []);
+
   const fetchCurrentUser = useCallback(async (authToken: string) => {
     try {
       const response = await fetch('/api/mattermost/me', {
@@ -1354,14 +1583,23 @@ export default function MattermostChat() {
         },
       });
 
+      if (response.status === 401) {
+        console.warn('Authentication failed - invalid token');
+        localStorage.removeItem('mattermost_token');
+        setToken('');
+        setError('Authentication failed. Please check your Personal Access Token');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch current user');
+        throw new Error(`Failed to fetch current user: ${response.status}`);
       }
 
       const userData = await response.json();
       setCurrentUser(userData);
     } catch (err) {
       console.error('Failed to fetch current user:', err);
+      setError('Failed to connect to Mattermost. Please check your token and try again.');
     }
   }, []);
 
@@ -1374,8 +1612,16 @@ export default function MattermostChat() {
         },
       });
 
+      if (response.status === 401) {
+        console.warn('Authentication failed - invalid token in fetchTeams');
+        localStorage.removeItem('mattermost_token');
+        setToken('');
+        setError('Authentication failed. Please check your Personal Access Token');
+        return [];
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch teams');
+        throw new Error(`Failed to fetch teams: ${response.status}`);
       }
 
       const teamsData = await response.json();
@@ -1386,6 +1632,7 @@ export default function MattermostChat() {
       return teamsData;
     } catch (err) {
       console.error('Failed to fetch teams:', err);
+      setError('Failed to load teams. Please check your connection.');
       return [];
     }
   }, []);
@@ -1543,24 +1790,32 @@ export default function MattermostChat() {
         if (debugEnabled) console.log('Attempting WebSocket connection (default mode)...', { wsUrl, userToken: '***' });
         
         if (websocketEnabled) {
-          try {
-            const webSocketAvailable = await EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, userToken);
-            if (debugEnabled) console.log('WebSocket connectivity test:', webSocketAvailable);
-            
-            if (webSocketAvailable) {
-              // WebSocket is available - use it as primary mode
-              await connectWebSocket(wsUrl, userToken);
-              setPollingMode(false);
-              if (debugEnabled) console.log('✅ WebSocket connected successfully (real-time mode active)');
-            } else {
-              // WebSocket failed - fallback to polling
-              console.warn('⚠️ WebSocket not available, falling back to polling mode');
+          // Skip WebSocket connectivity test on localhost to avoid CORS issues
+          const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+          
+          if (isLocalhost) {
+            if (debugEnabled) console.log('🏠 Running on localhost - using polling mode (avoids CORS)');
+            setPollingMode(true);
+          } else {
+            try {
+              const webSocketAvailable = await testWebSocketConnection(wsUrl, userToken);
+              if (debugEnabled) console.log('WebSocket connectivity test:', webSocketAvailable);
+              
+              if (webSocketAvailable) {
+                // WebSocket is available - use it as primary mode
+                await connectWebSocket(wsUrl, userToken);
+                setPollingMode(false);
+                if (debugEnabled) console.log('✅ WebSocket connected successfully (real-time mode active)');
+              } else {
+                // WebSocket failed - fallback to polling
+                console.warn('⚠️ WebSocket not available, falling back to polling mode');
+                setPollingMode(true);
+              }
+            } catch (wsError) {
+              // WebSocket connection failed - fallback to polling
+              console.warn('⚠️ WebSocket connection failed, falling back to polling mode:', wsError);
               setPollingMode(true);
             }
-          } catch (wsError) {
-            // WebSocket connection failed - fallback to polling
-            console.warn('⚠️ WebSocket connection failed, falling back to polling mode:', wsError);
-            setPollingMode(true);
           }
         } else {
           // WebSocket explicitly disabled - use polling
@@ -1575,7 +1830,7 @@ export default function MattermostChat() {
         // Check for specific WebSocket and configuration errors
         const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
           ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
-          : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+          : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl.replace('https://', 'wss://').replace('http://', 'ws://');
         const diagnostic = checkWebSocketIssues(wsUrl);
         if (diagnostic.hasIssues || (err instanceof Error && err.message.includes('CORS'))) {
           const corsMessage = diagnostic.issues.length > 0 ? diagnostic.issues.join('. ') : 'The Mattermost server needs CORS configuration for localhost development.';
@@ -1773,7 +2028,7 @@ export default function MattermostChat() {
                 wsUrl: (() => {
                   const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
                     ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
-                    : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+                    : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl.replace('https://', 'wss://').replace('http://', 'ws://');
                   return wsUrl;
                 })(),
                 baseUrl,
@@ -1804,7 +2059,7 @@ export default function MattermostChat() {
               // Run WebSocket diagnostics
               const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
                 ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
-                : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
+                : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl.replace('https://', 'wss://').replace('http://', 'ws://');
               const diagnostic = checkWebSocketIssues(wsUrl);
               if (diagnostic.hasIssues) {
                 console.log('⚠️ Potential Issues:');
@@ -1820,8 +2075,8 @@ export default function MattermostChat() {
                 console.log('🧪 Running manual WebSocket test...');
                 const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
                   ? process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || 'ws://teams.webuildtrades.co'
-                  : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl;
-                EnhancedWebSocketManagerStatic.testWebSocketConnection(wsUrl, token)
+                  : process.env.NEXT_PUBLIC_MATTERMOST_WS_URL || baseUrl.replace('https://', 'wss://').replace('http://', 'ws://');
+                testWebSocketConnection(wsUrl, token)
                   .then(result => {
                     console.log('🧪 Manual WebSocket test result:', result ? '✅ Success' : '❌ Failed');
                   })
@@ -1950,7 +2205,7 @@ export default function MattermostChat() {
                 {channels.map((channel) => (
                   <button
                     key={channel.id}
-                    onClick={() => setCurrentChannel(channel.id)}
+                    onClick={() => switchToChannel(channel.id)}
                     className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center justify-between group ${
                       currentChannel === channel.id 
                         ? 'bg-blue-600 text-white' 
@@ -2007,7 +2262,7 @@ export default function MattermostChat() {
                 {directMessages.map((dm) => (
                   <button
                     key={dm.id}
-                    onClick={() => setCurrentChannel(dm.id)}
+                    onClick={() => switchToChannel(dm.id)}
                     className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center justify-between group ${
                       currentChannel === dm.id 
                         ? 'bg-blue-600 text-white' 
@@ -2028,8 +2283,6 @@ export default function MattermostChat() {
                     !directMessages.find(dm => dm.other_user_id === user.id)
                   );
                   
-                  console.log('Debug - Available users count:', availableUsers.length);
-                  console.log('Debug - Users without DMs:', usersWithoutDMs.length);
                   
                   return (
                     <>

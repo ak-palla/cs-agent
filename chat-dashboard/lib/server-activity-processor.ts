@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
+import { createServiceClient } from '@/lib/supabase/service';
+import { databaseLogger, mattermostLogger } from './logger';
 
 export type PlatformType = 'mattermost' | 'trello' | 'flock';
 
@@ -30,33 +32,63 @@ export class ServerActivityProcessor {
     return await createClient();
   }
 
+  private getServiceClient() {
+    return createServiceClient();
+  }
+
   /**
    * Store a platform activity in Supabase
    */
   async storeActivity(activityData: ActivityData): Promise<StandardizedActivity | null> {
+    const startTime = Date.now();
     try {
-      const supabase = await this.getSupabaseClient();
+      const supabase = this.getServiceClient(); // Use service client for system operations
       const standardizedActivity = this.standardizeActivity(activityData);
       
+      mattermostLogger.debug('Storing activity', {
+        platform: activityData.platform,
+        eventType: activityData.event_type,
+        userId: activityData.user_id,
+        channelId: activityData.channel_id
+      });
+
       const { data, error } = await supabase
         .from('activities')
         .insert(standardizedActivity)
         .select()
         .single();
 
+      const duration = Date.now() - startTime;
+
       if (error) {
-        console.error('Error storing activity:', error);
+        databaseLogger.databaseOperation('INSERT', 'activities', false, duration, error);
+        mattermostLogger.error('Error storing activity', { 
+          error: error.message,
+          code: error.code,
+          activityType: activityData.event_type 
+        });
         return null;
       }
 
-      console.log(`✅ Activity stored: ${standardizedActivity.platform}:${standardizedActivity.event_type}`);
+      databaseLogger.databaseOperation('INSERT', 'activities', true, duration);
+      mattermostLogger.info('Activity stored successfully', {
+        activityId: data.id,
+        eventType: data.event_type,
+        platform: data.platform,
+        duration
+      });
       
       // Trigger workflow evaluation for this activity
       await this.evaluateWorkflowTriggers(data);
       
       return data;
     } catch (error) {
-      console.error('Error in storeActivity:', error);
+      const duration = Date.now() - startTime;
+      databaseLogger.databaseOperation('INSERT', 'activities', false, duration, error);
+      mattermostLogger.error('Exception in storeActivity', { 
+        error: error instanceof Error ? error.message : error,
+        activityType: activityData.event_type 
+      });
       return null;
     }
   }
@@ -260,7 +292,7 @@ export class ServerActivityProcessor {
     offset: number = 0
   ): Promise<StandardizedActivity[]> {
     try {
-      const supabase = await this.getSupabaseClient();
+      const supabase = this.getServiceClient(); // Use service client for system queries
       
       let query = supabase
         .from('activities')
@@ -291,7 +323,7 @@ export class ServerActivityProcessor {
    */
   async getActivityStats(timeframe: '24h' | '7d' | '30d' = '24h'): Promise<any> {
     try {
-      const supabase = await this.getSupabaseClient();
+      const supabase = this.getServiceClient(); // Use service client for system queries
       
       const now = new Date();
       let startTime: Date;
@@ -340,6 +372,53 @@ export class ServerActivityProcessor {
     } catch (error) {
       console.error('Error in getActivityStats:', error);
       return null;
+    }
+  }
+
+  /**
+   * Get workflow execution statistics
+   */
+  async getExecutionStats(): Promise<any> {
+    try {
+      const supabase = this.getServiceClient(); // Use service client for system queries
+      
+      const { data, error } = await supabase
+        .from('workflow_executions')
+        .select('status');
+
+      if (error) {
+        console.error('Error fetching execution stats:', error);
+        return {
+          total: 0,
+          pending: 0,
+          running: 0,
+          completed: 0,
+          failed: 0
+        };
+      }
+
+      const stats = {
+        total: data?.length || 0,
+        pending: 0,
+        running: 0,
+        completed: 0,
+        failed: 0
+      };
+
+      data?.forEach(execution => {
+        stats[execution.status as keyof typeof stats]++;
+      });
+
+      return stats;
+    } catch (error) {
+      console.error('Error in getExecutionStats:', error);
+      return {
+        total: 0,
+        pending: 0,
+        running: 0,
+        completed: 0,
+        failed: 0
+      };
     }
   }
 }

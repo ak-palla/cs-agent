@@ -1,0 +1,1207 @@
+main-app.js?v=1753342735134:1126 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:52 🔄 Loading admin dashboard data... {timeframe: '24h', selectedPlatform: 'all'}
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:56 📊 Fetching activity statistics...
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:61 ✅ Activity stats loaded: {total: 6, by_platform: {…}, by_event_type: {…}, timeframe: '24h'}
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:67 📋 Fetching recent activities...
+VM2097 content_script.js:2726 {side: 'content-script-global', packet: {…}}
+e.<computed> @ VM2097 content_script.js:2726
+(anonymous) @ VM2097 content_script.js:411
+(anonymous) @ VM2097 content_script.js:2
+u @ VM2097 content_script.js:2
+d @ VM2097 content_script.js:411
+messageResponder @ VM2097 content_script.js:411
+onMessage @ VM2096 browser-polyfill.js:1079
+VM2097 content_script.js:411 Uncaught (in promise) Error: No registered remote function called handleHistoryStateUpdate
+    at g.<anonymous> (VM2097 content_script.js:411:3985)
+    at Generator.next (<anonymous>)
+    at VM2097 content_script.js:2:21773
+    at new Promise (<anonymous>)
+    at u (VM2097 content_script.js:2:21569)
+    at d (VM2097 content_script.js:411:3521)
+    at messageResponder (VM2097 content_script.js:411:4916)
+    at onMessage (VM2096 browser-polyfill.js:1079:22)
+(anonymous) @ VM2097 content_script.js:411
+(anonymous) @ VM2097 content_script.js:2
+u @ VM2097 content_script.js:2
+d @ VM2097 content_script.js:411
+messageResponder @ VM2097 content_script.js:411
+onMessage @ VM2096 browser-polyfill.js:1079
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:72 ✅ Recent activities loaded: {count: 50}
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:78 ⚙️ Fetching execution statistics...
+VM2097 content_script.js:2726 {side: 'content-script-global', packet: {…}}
+e.<computed> @ VM2097 content_script.js:2726
+(anonymous) @ VM2097 content_script.js:411
+(anonymous) @ VM2097 content_script.js:2
+u @ VM2097 content_script.js:2
+d @ VM2097 content_script.js:411
+messageResponder @ VM2097 content_script.js:411
+onMessage @ VM2096 browser-polyfill.js:1079
+VM2097 content_script.js:411 Uncaught (in promise) Error: No registered remote function called confirmTabScriptLoaded
+    at g.<anonymous> (VM2097 content_script.js:411:3985)
+    at Generator.next (<anonymous>)
+    at VM2097 content_script.js:2:21773
+    at new Promise (<anonymous>)
+    at u (VM2097 content_script.js:2:21569)
+    at d (VM2097 content_script.js:411:3521)
+    at messageResponder (VM2097 content_script.js:411:4916)
+    at onMessage (VM2096 browser-polyfill.js:1079:22)
+(anonymous) @ VM2097 content_script.js:411
+(anonymous) @ VM2097 content_script.js:2
+u @ VM2097 content_script.js:2
+d @ VM2097 content_script.js:411
+messageResponder @ VM2097 content_script.js:411
+onMessage @ VM2096 browser-polyfill.js:1079
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:84 ✅ Execution stats loaded: {total: 0, pending: 0, running: 0, completed: 0, failed: 0}
+D:\CS_Agent\chat-dashboard\components\AdminDashboardPage.tsx:106 ✅ Dashboard data loading completed successfully
+VM2097 content_script.js:2726 RPC function with name extractRawPageContent has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name confirmTabScriptLoaded has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name showSidebar has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name showRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name testIfSidebarSetup has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name reloadRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name insertRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name removeRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name insertOrRemoveRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name updateRibbon has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name showContentTooltip has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name insertTooltip has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name toggleTooltipState has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name removeTooltip has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name insertOrRemoveTooltip has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name goToHighlight has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name saveImageAsNewNote has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name analyseImageAsWithAI has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name createHighlight has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name removeHighlights has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name teardownContentScripts has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name handleHistoryStateUpdate has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name addListToCache has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2
+VM2097 content_script.js:2726 RPC function with name removeListFromCache has already been registered 
+e.<computed> @ VM2097 content_script.js:2726
+e.<computed> @ content_script.js:2726
+A @ content_script.js:411
+O @ content_script.js:411
+(anonymous) @ content_script.js:2726
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+a @ content_script.js:2
+Promise.then
+l @ content_script.js:2
+(anonymous) @ content_script.js:2
+u @ content_script.js:2
+mt @ content_script.js:2726
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2726
+n @ content_script.js:2
+(anonymous) @ content_script.js:2
+(anonymous) @ content_script.js:2

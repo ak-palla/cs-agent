@@ -1,0 +1,75 @@
+Activity Monitor Enhancement Plan
+
+     Current Problems Identified
+
+     - Raw technical user IDs (mgm9oeveepr8r4gpicborvt8a) instead of readable usernames
+     - Cryptic channel IDs (smtmwatthzfqt7gubo6rf2743n) instead of channel names
+     - Generic event types (message_posted) without context
+     - No message content preview
+     - Technical timestamps instead of relative time
+     - No actionable elements (can't click to view/navigate)
+     - Poor visual hierarchy - all entries look the same
+
+     Enhancement Plan
+
+     1. Create Enhanced Activity Display Component
+
+     - Build EnhancedActivityCard.tsx with rich, contextual information
+     - Replace raw IDs with human-readable names and previews
+     - Add visual hierarchy with better icons, colors, and typography
+
+     2. User & Channel Resolution
+
+     - Create utility functions to resolve user IDs to actual usernames
+     - Create utility functions to resolve channel IDs to readable channel names
+     - Cache resolved names for performance
+
+     3. Rich Content Display
+
+     - Show message previews (first 50-100 characters)
+     - Display user avatars and channel icons
+     - Add event-specific formatting (messages, reactions, file uploads, etc.)
+     - Show relative timestamps ("2 minutes ago" vs technical timestamps)
+
+     4. Interactive Elements
+
+     - Add "View Message" button to jump to specific messages in channels
+     - Make channel names clickable to navigate to that channel
+     - Add user profile hover cards
+     - Include copy-to-clipboard functionality for technical details
+
+     5. Visual Improvements
+
+     - Color-coded platform indicators
+     - Event-type specific icons (💬 for messages, ❤️ for reactions, 📎 for files)
+     - Better spacing and typography
+     - Status indicators (new, processing, completed)
+     - Grouping by time periods or channels
+
+     6. Enhanced Filtering & Search
+
+     - Add message content to search functionality
+     - Filter by specific users or channels (with dropdown autocomplete)
+     - Add date range picker
+     - Quick filters for common scenarios ("My messages", "Mentions", "Files")
+
+     7. Real-time Updates
+
+     - Auto-refresh activity list
+     - Highlight new activities
+     - Add activity counters and badges
+
+     Files to Modify
+
+     1. components/AdminDashboardPage.tsx - Main activity display logic
+     2. components/EnhancedActivityCard.tsx - New rich activity card component (create)
+     3. lib/activity-helpers.ts - ID resolution utilities (create)
+     4. styles/activity-monitor.css - Enhanced styling (create)
+
+     Expected Outcome
+
+     Transform the technical activity log into a user-friendly, actionable feed that shows:
+     - "John Doe posted in #general-chat" (instead of technical IDs)
+     - "Hey team, the new feature is ready!" (message preview)
+     - "2 minutes ago" (relative time)
+     - Clickable elements to view full message or navigate to channel

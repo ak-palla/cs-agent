@@ -1,5 +1,5 @@
 import { MattermostWebSocketManager } from './websocket-manager';
-import { activityProcessor } from './activity-processor';
+// Using API routes instead of direct database access due to RLS
 
 interface MattermostWebSocketEvent {
   event: string;
@@ -73,9 +73,9 @@ export class EnhancedWebSocketManager extends MattermostWebSocketManager {
       const channelId = event.data?.channel_id || event.broadcast?.channel_id;
       const teamId = event.data?.team_id || event.broadcast?.team_id;
 
-      // Store the WebSocket event as an activity
-      await activityProcessor.storeActivity({
-        platform: 'mattermost',
+      // Store the WebSocket event as an activity via API route
+      const activityData = {
+        platform: 'mattermost' as const,
         event_type: eventType,
         user_id: userId,
         channel_id: channelId,
@@ -89,7 +89,19 @@ export class EnhancedWebSocketManager extends MattermostWebSocketManager {
           // Extract specific data fields based on event type
           ...this.extractEventSpecificData(event)
         }
+      };
+
+      const response = await fetch('/api/admin/activities/store', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activityData)
       });
+
+      if (!response.ok) {
+        throw new Error(`Failed to store activity: ${response.statusText}`);
+      }
 
       console.log(`📡 WebSocket activity logged: ${eventType} (${event.event})`);
 

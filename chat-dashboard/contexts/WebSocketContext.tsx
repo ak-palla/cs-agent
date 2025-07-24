@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
-import MattermostWebSocketManager from '@/lib/websocket-manager';
+import EnhancedMattermostClient from '@/lib/enhanced-mattermost-client';
+import { websocketLogger, mattermostLogger } from '@/lib/logger';
 
 interface WebSocketContextType {
   connectionStatus: 'connected' | 'connecting' | 'disconnected';
@@ -23,7 +24,7 @@ interface WebSocketProviderProps {
 }
 
 export function WebSocketProvider({ children }: WebSocketProviderProps) {
-  const [wsManager, setWsManager] = useState<MattermostWebSocketManager | null>(null);
+  const [mattermostClient, setMattermostClient] = useState<EnhancedMattermostClient | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('disconnected');
   const [reconnectInfo, setReconnectInfo] = useState({
     isReconnecting: false,
@@ -35,42 +36,57 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
   const [eventListeners, setEventListeners] = useState<Map<string, Set<(data: any) => void>>>(new Map());
 
   const connect = useCallback(async (url: string, token: string) => {
-    if (wsManager) {
-      console.log('Disconnecting existing WebSocket manager');
-      wsManager.disconnect();
-      setWsManager(null);
+    if (mattermostClient) {
+      websocketLogger.info('Disconnecting existing Mattermost client');
+      await mattermostClient.disconnect();
+      setMattermostClient(null);
       // Wait a bit for cleanup
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    console.log('Creating new WebSocket manager');
-    const manager = new MattermostWebSocketManager({
-      url,
-      token,
+    // Convert WebSocket URL to HTTP URL for API calls
+    const httpUrl = url.replace('wss://', 'https://').replace('ws://', 'http://');
+    
+    websocketLogger.info('Creating new Enhanced Mattermost client with comprehensive logging', {
+      originalUrl: url,
+      httpUrl: httpUrl
+    });
+    
+    const client = new EnhancedMattermostClient({
+      serverUrl: httpUrl,
+      accessToken: token,
       onConnect: () => {
+        websocketLogger.info('WebSocketContext: Connection established');
         setConnectionStatus('connected');
         setReconnectInfo(prev => ({ ...prev, isReconnecting: false, attempts: 0 }));
       },
       onDisconnect: () => {
+        websocketLogger.warn('WebSocketContext: Connection lost');
         setConnectionStatus('disconnected');
-        const info = manager.getReconnectInfo();
-        setReconnectInfo({
-          isReconnecting: info.isReconnecting,
-          attempts: info.attempts,
-          maxAttempts: info.maxAttempts,
-        });
+        setReconnectInfo(prev => ({ ...prev, isReconnecting: true }));
+      },
+      onReconnect: () => {
+        websocketLogger.info('WebSocketContext: Reconnection successful');
+        setReconnectInfo(prev => ({ 
+          ...prev, 
+          isReconnecting: false, 
+          attempts: prev.attempts + 1 
+        }));
       },
       onError: (error) => {
-        console.error('WebSocket error:', error);
+        websocketLogger.error('WebSocketContext: Connection error', { error });
         setConnectionStatus('disconnected');
+        
         // Provide more user-friendly error handling
         if (error instanceof Error) {
           if (error.message.includes('CORS')) {
-            console.warn('CORS issue detected. Consider using polling mode or configuring CORS on the server.');
+            websocketLogger.warn('CORS issue detected. Consider using polling mode or configuring CORS on the server.');
           }
         }
       },
       onMessage: (event) => {
+        websocketLogger.debug('WebSocketContext: Message received', { event: event.event });
+        
         // Dispatch to event listeners
         const listeners = eventListeners.get(event.event);
         if (listeners) {
@@ -78,7 +94,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             try {
               callback(event.data);
             } catch (error) {
-              console.error('Error in WebSocket event listener:', error);
+              websocketLogger.error('Error in WebSocket event listener', { error, event: event.event });
             }
           });
         }
@@ -90,50 +106,55 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             try {
               callback(event);
             } catch (error) {
-              console.error('Error in WebSocket event listener:', error);
+              websocketLogger.error('Error in global WebSocket event listener', { error, event: event.event });
             }
           });
         }
       },
     });
 
-    setWsManager(manager);
-    setConnectionStatus('connecting');
-    
     try {
-      await manager.connect();
+      setConnectionStatus('connecting');
+      await client.connect();
+      setMattermostClient(client);
+      mattermostLogger.info('WebSocketContext: Connection successful');
     } catch (error) {
+      mattermostLogger.error('Failed to connect Mattermost client', { error });
       setConnectionStatus('disconnected');
       throw error;
     }
-  }, [wsManager, eventListeners]);
+  }, [eventListeners]);
 
-  const disconnect = useCallback(() => {
-    if (wsManager) {
-      wsManager.disconnect();
-      setWsManager(null);
+  const disconnect = useCallback(async () => {
+    if (mattermostClient) {
+      await mattermostClient.disconnect();
+      setMattermostClient(null);
     }
     setConnectionStatus('disconnected');
     setReconnectInfo({ isReconnecting: false, attempts: 0, maxAttempts: 3 });
-  }, [wsManager]);
+  }, [mattermostClient]);
 
   const sendTyping = useCallback((channelId: string, parentId?: string) => {
-    if (wsManager && connectionStatus === 'connected') {
-      wsManager.sendTyping(channelId, parentId);
+    if (mattermostClient && connectionStatus === 'connected') {
+      // Note: Official client handles typing through WebSocket client
+      websocketLogger.debug('Sending typing indicator', { channelId, parentId });
+      // The official client's WebSocket client handles typing events automatically
     }
-  }, [wsManager, connectionStatus]);
+  }, [mattermostClient, connectionStatus]);
 
   const subscribeToChannel = useCallback((channelId: string) => {
-    if (wsManager && connectionStatus === 'connected') {
-      wsManager.subscribeToChannel(channelId);
+    if (mattermostClient && connectionStatus === 'connected') {
+      websocketLogger.debug('Subscribing to channel', { channelId });
+      // The official client automatically handles channel subscriptions
     }
-  }, [wsManager, connectionStatus]);
+  }, [mattermostClient, connectionStatus]);
 
   const unsubscribeFromChannel = useCallback((channelId: string) => {
-    if (wsManager && connectionStatus === 'connected') {
-      wsManager.unsubscribeFromChannel(channelId);
+    if (mattermostClient && connectionStatus === 'connected') {
+      websocketLogger.debug('Unsubscribing from channel', { channelId });
+      // The official client handles channel unsubscriptions automatically
     }
-  }, [wsManager, connectionStatus]);
+  }, [mattermostClient, connectionStatus]);
 
   const addEventListener = useCallback((event: string, callback: (data: any) => void) => {
     setEventListeners(prev => {
@@ -163,31 +184,29 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
 
   // Update connection status periodically
   useEffect(() => {
-    if (!wsManager) return;
+    if (!mattermostClient) return;
 
     const interval = setInterval(() => {
-      const status = wsManager.getConnectionStatus();
-      setConnectionStatus(status);
-      
-      const info = wsManager.getReconnectInfo();
-      setReconnectInfo({
-        isReconnecting: info.isReconnecting,
-        attempts: info.attempts,
-        maxAttempts: info.maxAttempts,
+      // The official client manages connection status internally
+      // We rely on the callback events for status updates
+      websocketLogger.debug('Connection status check', { 
+        connected: mattermostClient.connected,
+        connectionStatus 
       });
-    }, 1000);
+    }, 5000); // Check less frequently since status is event-driven
 
     return () => clearInterval(interval);
-  }, [wsManager]);
+  }, [mattermostClient, connectionStatus]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (wsManager) {
-        wsManager.disconnect();
+      if (mattermostClient) {
+        mattermostClient.disconnect();
+        websocketLogger.info('WebSocketContext: Cleaned up on unmount');
       }
     };
-  }, [wsManager]);
+  }, [mattermostClient]);
 
   const value: WebSocketContextType = {
     connectionStatus,

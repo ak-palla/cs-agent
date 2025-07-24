@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Activity, Workflow, Zap, Users, BarChart3, RefreshCw, Search, Filter, Download, Play, Pause, Settings, AlertTriangle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
-import { activityProcessor } from '@/lib/activity-processor';
+import EnhancedActivityCard from './EnhancedActivityCard';
+import { preloadUserAndChannelData } from '@/lib/activity-helpers';
+// Removed direct activity processor import - using API routes instead
 
 interface ActivityStats {
   total: number;
@@ -47,32 +49,86 @@ export default function AdminDashboardPage() {
     return () => clearInterval(interval);
   }, [timeframe]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + R to refresh (prevent default browser refresh)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'r' && activeTab === 'activities') {
+        e.preventDefault();
+        loadDashboardData();
+      }
+      
+      // Escape to clear search
+      if (e.key === 'Escape' && searchQuery) {
+        setSearchQuery('');
+      }
+      
+      // Ctrl/Cmd + F to focus search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f' && activeTab === 'activities') {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[placeholder*="Search activities"]') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [activeTab, searchQuery]);
+
   const loadDashboardData = async () => {
     try {
       console.log('🔄 Loading admin dashboard data...', { timeframe, selectedPlatform });
       setLoading(true);
       
+      // Preload user and channel data for better performance
+      console.log('🔄 Preloading user and channel data...');
+      preloadUserAndChannelData().catch(error => {
+        console.warn('⚠️ Failed to preload user/channel data:', error);
+      });
+      
       // Load activity statistics
       console.log('📊 Fetching activity statistics...');
-      const stats = await activityProcessor.getActivityStats(timeframe);
-      setActivityStats(stats);
-      console.log('✅ Activity stats loaded:', stats);
+      const statsResponse = await fetch(`/api/admin/activities/stats?timeframe=${timeframe}`);
+      if (statsResponse.ok) {
+        const stats = await statsResponse.json();
+        setActivityStats(stats);
+        console.log('✅ Activity stats loaded:', stats);
+      } else {
+        console.error('❌ Error fetching activity stats:', await statsResponse.text());
+      }
 
       // Load recent activities
       console.log('📋 Fetching recent activities...');
-      const activities = await activityProcessor.getRecentActivities(
-        selectedPlatform === 'all' ? undefined : selectedPlatform as any,
-        50
-      );
-      setRecentActivities(activities);
-      console.log('✅ Recent activities loaded:', { count: activities.length });
+      const activitiesResponse = await fetch(`/api/admin/activities?platform=${selectedPlatform}&limit=50&offset=0`);
+      if (activitiesResponse.ok) {
+        const activities = await activitiesResponse.json();
+        setRecentActivities(activities);
+        console.log('✅ Recent activities loaded:', { count: activities.length });
+      } else {
+        console.error('❌ Error fetching activities:', await activitiesResponse.text());
+      }
 
       // Get real execution stats from Supabase
       console.log('⚙️ Fetching execution statistics...');
       try {
-        const execStats = await activityProcessor.getExecutionStats();
-        setExecutionStats(execStats);
-        console.log('✅ Execution stats loaded:', execStats);
+        const execStatsResponse = await fetch('/api/admin/executions/stats');
+        if (execStatsResponse.ok) {
+          const execStats = await execStatsResponse.json();
+          setExecutionStats(execStats);
+          console.log('✅ Execution stats loaded:', execStats);
+        } else {
+          console.error('❌ Error fetching execution stats:', await execStatsResponse.text());
+          setExecutionStats({
+            total: 0,
+            pending: 0,
+            running: 0,
+            completed: 0,
+            failed: 0
+          });
+        }
       } catch (error) {
         console.error('❌ Error loading execution stats:', error);
         setExecutionStats({
@@ -129,14 +185,28 @@ export default function AdminDashboardPage() {
   };
 
   const filteredActivities = recentActivities.filter(activity => {
-    const matchesSearch = !searchQuery || 
-      activity.event_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      activity.user_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      JSON.stringify(activity.data).toLowerCase().includes(searchQuery.toLowerCase());
+    if (selectedPlatform !== 'all' && activity.platform !== selectedPlatform) {
+      return false;
+    }
     
-    const matchesPlatform = selectedPlatform === 'all' || activity.platform === selectedPlatform;
+    if (!searchQuery) return true;
     
-    return matchesSearch && matchesPlatform;
+    const query = searchQuery.toLowerCase();
+    
+    // Search in multiple fields for better results
+    const searchableContent = [
+      activity.event_type,
+      activity.user_id,
+      activity.channel_id,
+      activity.data?.message || '',
+      activity.data?.text || '',
+      activity.data?.content || '',
+      activity.platform,
+      // Include any other relevant data fields
+      Object.values(activity.data || {}).join(' ')
+    ].filter(Boolean).join(' ').toLowerCase();
+    
+    return searchableContent.includes(query);
   });
 
   return (
@@ -303,11 +373,20 @@ export default function AdminDashboardPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search activities..."
+                  placeholder="Search activities, users, channels, messages..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black placeholder-gray-500"
                 />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    title="Clear search"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
               <select
                 value={selectedPlatform}
@@ -328,43 +407,106 @@ export default function AdminDashboardPage() {
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
               </select>
+              
+              {/* Refresh Button */}
+              <button
+                onClick={loadDashboardData}
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                title="Refresh activities"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <span>Refresh</span>
+              </button>
             </div>
+
+            {/* Results Summary */}
+            {!loading && (
+              <div className="flex items-center justify-between text-sm text-gray-600 mb-4 bg-white rounded-lg p-3 border border-gray-200">
+                <div className="flex items-center space-x-4">
+                  <div>
+                    <span className="font-medium text-gray-900">
+                      {filteredActivities.length}
+                    </span>
+                    <span className="text-gray-600">
+                      {filteredActivities.length === 1 ? ' activity' : ' activities'}
+                    </span>
+                    {recentActivities.length !== filteredActivities.length && (
+                      <span className="text-gray-500">
+                        {' '}of {recentActivities.length} total
+                      </span>
+                    )}
+                  </div>
+                  {searchQuery && (
+                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      Filtered by: "{searchQuery}"
+                    </div>
+                  )}
+                  {selectedPlatform !== 'all' && (
+                    <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      Platform: {selectedPlatform}
+                    </div>
+                  )}
+                </div>
+                <div className="text-xs text-gray-500 flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>Updated {new Date().toLocaleTimeString()}</span>
+                </div>
+              </div>
+            )}
 
             {/* Activity List */}
             <div className="flex-1 overflow-y-auto">
-              <div className="space-y-3">
-                {filteredActivities.map((activity) => (
-                  <div key={activity.id} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
-                        <div className="text-2xl">{getPlatformIcon(activity.platform)}</div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPlatformColor(activity.platform)}`}>
-                              {activity.platform}
-                            </span>
-                            <span className="font-medium text-black">{activity.event_type}</span>
-                          </div>
-                          <p className="text-sm text-black mb-2">{formatTimestamp(activity.timestamp)}</p>
-                          {activity.user_id && (
-                            <p className="text-xs text-black">User: {activity.user_id}</p>
-                          )}
-                          {activity.channel_id && (
-                            <p className="text-xs text-black">Channel: {activity.channel_id}</p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {activity.processed ? (
-                          <CheckCircle className="w-5 h-5 text-green-500" title="Processed" />
-                        ) : (
-                          <Clock className="w-5 h-5 text-yellow-500" title="Pending" />
-                        )}
-                      </div>
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center">
+                    <RefreshCw className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-600">Loading activities...</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredActivities.map((activity) => (
+                  <EnhancedActivityCard
+                    key={activity.id}
+                    activity={activity}
+                    onViewMessage={(channelId, messageId) => {
+                      // Navigate to message in Mattermost chat
+                      window.open(`/mattermost?channel=${channelId}&message=${messageId}`, '_blank');
+                    }}
+                    onViewChannel={(channelId) => {
+                      // Navigate to channel in Mattermost chat
+                      window.open(`/mattermost?channel=${channelId}`, '_blank');
+                    }}
+                  />
+                ))}
+                
+                {/* Empty State */}
+                {filteredActivities.length === 0 && (
+                  <div className="text-center py-12">
+                    <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No activities found</h3>
+                    <p className="text-gray-500 mb-4">
+                      {searchQuery || selectedPlatform !== 'all' 
+                        ? 'Try adjusting your filters or search terms.'
+                        : 'Activities will appear here as they are processed.'}
+                    </p>
+                    
+                    {/* Helpful Tips */}
+                    <div className="bg-blue-50 rounded-lg p-4 text-left max-w-md mx-auto">
+                      <h4 className="font-medium text-blue-900 mb-2">💡 Tips:</h4>
+                      <ul className="text-sm text-blue-800 space-y-1">
+                        <li>• Search for usernames, channels, or message content</li>
+                        <li>• Use <kbd className="bg-blue-200 px-1 rounded">Ctrl+F</kbd> to quickly focus search</li>
+                        <li>• Press <kbd className="bg-blue-200 px-1 rounded">Esc</kbd> to clear search</li>
+                        <li>• Click channel names to navigate directly</li>
+                        <li>• Use the copy button to share activity details</li>
+                      </ul>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -110,7 +110,7 @@ export class MattermostWebSocketManager {
         console.log('Creating WebSocket instance...');
         try {
           // Direct WebSocket connection with authentication
-          // Some Mattermost servers prefer Authorization header over query parameter
+          // Note: Mixed content (https page -> ws://) will be handled by graceful fallback to polling
           const authUrl = `${wsUrl}?token=${encodeURIComponent(this.config.token)}`;
           
           // Try with protocols for better compatibility
@@ -456,14 +456,19 @@ export class MattermostWebSocketManager {
         
         const debugEnabled = process.env.NEXT_PUBLIC_DEBUG_WEBSOCKET === 'true';
         
-        // Test basic HTTP connectivity first
+        // Test basic HTTP connectivity first through proxy to avoid CORS
         if (debugEnabled) {
           console.log('🌐 Testing basic HTTP connectivity to server...');
-          const httpReachable = await MattermostWebSocketManager.testHttpConnectivity(url);
-          console.log('🌐 HTTP connectivity test:', httpReachable ? '✅ Reachable' : '❌ Unreachable');
-          
-          if (!httpReachable) {
-            console.log('💡 Server appears unreachable via HTTP - WebSocket will likely fail');
+          try {
+            const { MattermostProxy } = await import('./mattermost-proxy');
+            const httpReachable = await MattermostProxy.testConnectivity();
+            console.log('🌐 HTTP connectivity test:', httpReachable ? '✅ Reachable' : '❌ Unreachable');
+            
+            if (!httpReachable) {
+              console.log('💡 Server appears unreachable via HTTP - WebSocket will likely fail');
+            }
+          } catch (error) {
+            console.log('⚠️ Could not test HTTP connectivity:', error);
           }
         }
         

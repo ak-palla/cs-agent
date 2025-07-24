@@ -24,7 +24,8 @@
       "WebFetch(domain:dev.flock.com)",
       "Bash(pkill:*)",
       "Bash(true)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm run:*)"
     ],
     "deny": []
   }
