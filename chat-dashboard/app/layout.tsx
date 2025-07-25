@@ -3,9 +3,9 @@ import type { Viewport } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Sidebar from "@/components/Sidebar";
-import ZoomFix from "@/components/ZoomFix";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
+import { FlockAuthProvider } from "@/lib/flock-oauth-manager";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -42,20 +42,21 @@ export default function RootLayout({
       <body className={`${geistSans.className} antialiased min-h-screen`}>
         <WebSocketProvider>
           <NotificationProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-            <div className="flex h-screen zoom-reset">
-              <Sidebar />
-              <main className="flex-1 overflow-hidden responsive-container">
-                {children}
-              </main>
-              <ZoomFix />
-            </div>
-            </ThemeProvider>
+            <FlockAuthProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+              <div className="flex h-screen zoom-reset">
+                <Sidebar />
+                <main className="flex-1 overflow-hidden responsive-container">
+                  {children}
+                </main>
+              </div>
+              </ThemeProvider>
+            </FlockAuthProvider>
           </NotificationProvider>
         </WebSocketProvider>
       </body>

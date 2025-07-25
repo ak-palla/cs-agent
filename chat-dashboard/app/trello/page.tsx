@@ -172,6 +172,7 @@ export default function TrelloPage() {
           onBoardChange={(board) => {
             console.log('Board changed:', board.name);
           }}
+          isAuthenticated={isAuthenticated}
         />
       </div>
     </div>

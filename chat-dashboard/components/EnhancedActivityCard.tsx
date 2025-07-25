@@ -5,6 +5,9 @@ import { ExternalLink, Copy, User, Hash, Clock, CheckCircle, AlertCircle } from 
 import { 
   resolveUserName, 
   resolveChannelName, 
+  resolveTrelloUserName,
+  resolveTrelloCardName,
+  resolveTrelloBoardName,
   getMessagePreview, 
   getRelativeTime, 
   getEventTypeInfo, 
@@ -41,22 +44,33 @@ export default function EnhancedActivityCard({
   useEffect(() => {
     const resolveNames = async () => {
       if (activity.user_id) {
-        const resolvedUserName = await resolveUserName(activity.user_id);
+        let resolvedUserName;
+        if (activity.platform === 'trello') {
+          resolvedUserName = await resolveTrelloUserName(activity.user_id);
+        } else {
+          resolvedUserName = await resolveUserName(activity.user_id);
+        }
         setUserName(resolvedUserName);
       } else {
         setUserName('System');
       }
 
       if (activity.channel_id) {
-        const resolvedChannelName = await resolveChannelName(activity.channel_id);
+        let resolvedChannelName;
+        if (activity.platform === 'trello') {
+          // For Trello, channel_id is actually board_id
+          resolvedChannelName = await resolveTrelloBoardName(activity.channel_id);
+        } else {
+          resolvedChannelName = await resolveChannelName(activity.channel_id);
+        }
         setChannelName(resolvedChannelName);
       } else {
-        setChannelName('Direct Message');
+        setChannelName(activity.platform === 'trello' ? 'Unknown Board' : 'Direct Message');
       }
     };
 
     resolveNames();
-  }, [activity.user_id, activity.channel_id]);
+  }, [activity.user_id, activity.channel_id, activity.platform]);
 
   const eventInfo = getEventTypeInfo(activity.event_type);
   const platformInfo = getPlatformInfo(activity.platform);

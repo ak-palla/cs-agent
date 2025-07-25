@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Plus, Settings, Search, Filter, MoreHorizontal, Calendar, User, Tag, AlertCircle, Star, UserPlus, X, Info } from 'lucide-react';
+import { Plus, Settings, Search, Filter, MoreHorizontal, Calendar, User, Tag, AlertCircle, Star, UserPlus, X, Info, RefreshCw, Activity } from 'lucide-react';
 import { TrelloBoard as TrelloBoardType, TrelloList as TrelloListType, TrelloCard as TrelloCardType, TrelloAction, TrelloMember } from '@/lib/trello-client';
+import { trelloActivityPoller, ActivitySyncState } from '@/lib/trello-activity-poller';
 import TrelloListComponent from './TrelloList';
 import TrelloCardComponent from './TrelloCard';
 import {
@@ -28,6 +29,7 @@ interface TrelloBoardProps {
   boardId?: string;
   onBoardChange?: (board: TrelloBoardType) => void;
   useOAuth?: boolean;
+  isAuthenticated?: boolean;
 }
 
 interface CreateCardForm {
@@ -41,13 +43,18 @@ interface CreateListForm {
   name: string;
 }
 
-export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true }: TrelloBoardProps) {
+export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true, isAuthenticated = false }: TrelloBoardProps) {
   // State management
   const [board, setBoard] = useState<TrelloBoardType | null>(null);
   const [boards, setBoards] = useState<TrelloBoardType[]>([]);
   const [selectedBoardId, setSelectedBoardId] = useState<string>(boardId || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Activity polling state
+  const [syncState, setSyncState] = useState<ActivitySyncState | null>(null);
+  const [isManualSyncing, setIsManualSyncing] = useState(false);
+  const [pollingEnabled, setPollingEnabled] = useState(true);
   
   // UI state
   const [showCreateCard, setShowCreateCard] = useState<string | null>(null);
@@ -187,6 +194,22 @@ export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true }:
       setBoard(processedBoard);
       onBoardChange?.(processedBoard);
 
+      // Activity monitoring setup (webhooks + polling)
+      if (isAuthenticated) {
+        // Try webhook registration first (works on public deployments)
+        registerBoardWebhook(boardIdToFetch).catch(webhookError => {
+          console.warn('⚠️ Failed to register webhook for board:', webhookError);
+          console.info('ℹ️ Falling back to polling-based activity monitoring');
+        });
+        
+        // Start activity polling as backup/alternative to webhooks
+        if (pollingEnabled) {
+          startActivityPolling(boardIdToFetch);
+        }
+      } else {
+        console.info('ℹ️ Skipping activity monitoring - user not authenticated');
+      }
+
     } catch (err) {
       console.error('Error fetching board:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch board');
@@ -194,6 +217,204 @@ export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true }:
       setLoading(false);
     }
   }, [useOAuth, onBoardChange]);
+
+  /**
+   * Register webhook for board to enable activity monitoring
+   * Follows Atlassian best practices for webhook management
+   */
+  const registerBoardWebhook = useCallback(async (boardId: string) => {
+    try {
+      console.log('🔗 Checking webhook status for board:', boardId);
+      
+      // Check if webhook already exists for this board
+      const webhooksResponse = await fetch('/api/trello/webhooks?useOAuth=true', {
+        credentials: 'include'
+      });
+      
+      if (!webhooksResponse.ok) {
+        const errorData = await webhooksResponse.json().catch(() => ({}));
+        
+        // Handle OAuth authentication issues specifically
+        if (webhooksResponse.status === 401) {
+          console.warn('⚠️ Trello OAuth authentication required for webhooks');
+          console.info('ℹ️ Webhook registration skipped - activities will not be monitored automatically');
+          console.info('ℹ️ To enable activity monitoring, ensure you are logged in to Trello via OAuth');
+          return null; // Exit gracefully without throwing error
+        }
+        
+        console.error('❌ Webhook API error:', {
+          status: webhooksResponse.status,
+          statusText: webhooksResponse.statusText,
+          error: errorData
+        });
+        throw new Error(`Failed to check existing webhooks: ${webhooksResponse.status} ${errorData.error || webhooksResponse.statusText}`);
+      }
+      
+      const webhooksData = await webhooksResponse.json();
+      const existingWebhook = webhooksData.data?.find((webhook: any) => 
+        webhook.idModel === boardId && webhook.active
+      );
+      
+      if (existingWebhook) {
+        console.log('✅ Active webhook already registered for board:', boardId, existingWebhook.id);
+        return existingWebhook;
+      }
+      
+      // Check for inactive webhooks and clean them up
+      const inactiveWebhooks = webhooksData.data?.filter((webhook: any) => 
+        webhook.idModel === boardId && !webhook.active
+      );
+      
+      for (const inactiveWebhook of inactiveWebhooks || []) {
+        console.log('🧹 Cleaning up inactive webhook:', inactiveWebhook.id);
+        try {
+          await fetch(`/api/trello/webhooks?webhookId=${inactiveWebhook.id}&useOAuth=true`, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+        } catch (cleanupError) {
+          console.warn('Failed to cleanup inactive webhook:', cleanupError);
+        }
+      }
+      
+      // Create new webhook for this board
+      console.log('🆕 Creating new webhook for board:', boardId);
+      const response = await fetch('/api/trello/webhooks?useOAuth=true', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          idModel: boardId,
+          description: 'CS Agent Dashboard - Activity Monitor (Auto-registered)'
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        
+        // Handle localhost limitation gracefully
+        if (response.status === 400 && errorData.error === 'Webhook creation not supported on localhost') {
+          console.warn('⚠️ Webhook creation not supported on localhost:', errorData.message);
+          console.info('ℹ️ Trello activities will still work, but won\'t update in real-time without webhooks');
+          return null; // Exit gracefully
+        }
+        
+        console.error('❌ Webhook creation failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData
+        });
+        throw new Error(errorData.error || errorData.details || errorData.message || `Failed to register webhook: ${response.status} ${response.statusText}`);
+      }
+      
+      const webhookData = await response.json();
+      console.log('✅ Successfully registered webhook for board:', boardId, {
+        webhookId: webhookData.data.id,
+        callbackURL: webhookData.data.callbackURL,
+        active: webhookData.data.active
+      });
+      
+      return webhookData.data;
+      
+    } catch (error) {
+      console.error('❌ Error registering board webhook:', error);
+      throw error;
+    }
+  }, []);
+
+  /**
+   * Start activity polling for a board
+   */
+  const startActivityPolling = useCallback(async (boardId: string) => {
+    try {
+      console.log('📊 Starting activity polling for board:', boardId);
+      await trelloActivityPoller.startPolling(boardId);
+      
+      // Update sync state
+      const newSyncState = trelloActivityPoller.getSyncState(boardId);
+      setSyncState(newSyncState || null);
+      
+    } catch (error) {
+      console.error('❌ Error starting activity polling:', error);
+    }
+  }, []);
+
+  /**
+   * Stop activity polling for current board
+   */
+  const stopActivityPolling = useCallback(() => {
+    if (selectedBoardId) {
+      console.log('📊 Stopping activity polling for board:', selectedBoardId);
+      trelloActivityPoller.stopPolling(selectedBoardId);
+      setSyncState(null);
+    }
+  }, [selectedBoardId]);
+
+  /**
+   * Manually sync activities for current board
+   */
+  const manualSyncActivities = useCallback(async () => {
+    if (!selectedBoardId || isManualSyncing) return;
+    
+    try {
+      setIsManualSyncing(true);
+      console.log('🔄 Manual sync triggered for board:', selectedBoardId);
+      
+      await trelloActivityPoller.syncBoardActivities(selectedBoardId);
+      
+      // Update sync state
+      const newSyncState = trelloActivityPoller.getSyncState(selectedBoardId);
+      setSyncState(newSyncState || null);
+      
+    } catch (error) {
+      console.error('❌ Error during manual sync:', error);
+    } finally {
+      setIsManualSyncing(false);
+    }
+  }, [selectedBoardId, isManualSyncing]);
+
+  /**
+   * Toggle activity polling
+   */
+  const togglePolling = useCallback(() => {
+    const newEnabled = !pollingEnabled;
+    setPollingEnabled(newEnabled);
+    
+    if (newEnabled && selectedBoardId && isAuthenticated) {
+      startActivityPolling(selectedBoardId);
+    } else if (!newEnabled && selectedBoardId) {
+      stopActivityPolling();
+    }
+  }, [pollingEnabled, selectedBoardId, isAuthenticated, startActivityPolling, stopActivityPolling]);
+
+  // Update sync state periodically
+  useEffect(() => {
+    if (!selectedBoardId) return;
+    
+    const updateSyncState = () => {
+      const currentSyncState = trelloActivityPoller.getSyncState(selectedBoardId);
+      setSyncState(currentSyncState || null);
+    };
+    
+    // Update immediately
+    updateSyncState();
+    
+    // Update every 5 seconds
+    const interval = setInterval(updateSyncState, 5000);
+    
+    return () => clearInterval(interval);
+  }, [selectedBoardId]);
+
+  // Cleanup polling on unmount or board change
+  useEffect(() => {
+    return () => {
+      if (selectedBoardId) {
+        trelloActivityPoller.stopPolling(selectedBoardId);
+      }
+    };
+  }, [selectedBoardId]);
 
   /**
    * Create a new list
@@ -886,6 +1107,59 @@ export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true }:
               <button className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all">
                 <UserPlus className="h-5 w-5" />
               </button>
+            </div>
+          )}
+
+          {/* Activity Monitoring Controls */}
+          {isAuthenticated && board && (
+            <div className="flex items-center space-x-3">
+              {/* Manual Sync Button */}
+              <button
+                onClick={manualSyncActivities}
+                disabled={isManualSyncing}
+                className="flex items-center space-x-2 px-3 py-2 bg-white bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Manually sync activities"
+              >
+                <RefreshCw className={`h-4 w-4 text-white ${isManualSyncing ? 'animate-spin' : ''}`} />
+                <span className="text-white text-sm font-medium">
+                  {isManualSyncing ? 'Syncing...' : 'Sync'}
+                </span>
+              </button>
+
+              {/* Polling Toggle */}
+              <button
+                onClick={togglePolling}
+                className={`flex items-center space-x-2 px-3 py-2 backdrop-blur-sm rounded-lg transition-all ${
+                  pollingEnabled 
+                    ? 'bg-green-500 bg-opacity-20 hover:bg-opacity-30' 
+                    : 'bg-white bg-opacity-20 hover:bg-opacity-30'
+                }`}
+                title={`${pollingEnabled ? 'Disable' : 'Enable'} automatic activity polling`}
+              >
+                <Activity className={`h-4 w-4 ${pollingEnabled ? 'text-green-300' : 'text-white'}`} />
+                <span className={`text-sm font-medium ${pollingEnabled ? 'text-green-300' : 'text-white'}`}>
+                  {pollingEnabled ? 'Live' : 'Off'}
+                </span>
+              </button>
+
+              {/* Sync Status */}
+              {syncState && (
+                <div className="flex items-center space-x-2 px-3 py-2 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg">
+                  <div className={`w-2 h-2 rounded-full ${
+                    syncState.isPolling 
+                      ? 'bg-green-400 animate-pulse' 
+                      : syncState.lastError 
+                        ? 'bg-red-400' 
+                        : 'bg-yellow-400'
+                  }`}></div>
+                  <span className="text-white text-xs">
+                    {syncState.lastError 
+                      ? 'Error' 
+                      : `Last sync: ${new Date(syncState.lastSyncTimestamp).toLocaleTimeString()}`
+                    }
+                  </span>
+                </div>
+              )}
             </div>
           )}
 

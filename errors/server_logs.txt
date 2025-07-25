@@ -1,0 +1,71 @@
+🎯 API: Access token parsed successfully
+🎯 API: Token has oauth_token: true
+🎯 API: Token has oauth_token_secret: true
+[2025-07-25T12:07:01.194Z] [INFO] [TRELLO] TrelloOAuth initialized {
+  apiKey: '570e525c...',
+  redirectUri: 'https://localhost:3000/auth/trello/callback',
+  scopes: [ 'read', 'write', 'account' ],
+  expiration: 'never'
+}
+🔍 API: Making Trello API request for boards...
+🔗 Making Trello API request: {
+  method: 'GET',
+  url: 'https://api.trello.com/1/members/me/boards?filter=open&fields=name,desc,closed,idOrganization,pinned,url,shortLink',
+  authHeader: 'OAuth oauth_consumer_key="570e525c20a3abc0130ad515...'
+}
+📡 Trello API response: 200 OK
+✅ Webhooks fetched successfully: 0
+ GET /api/trello/webhooks?useOAuth=true 200 in 385ms
+✅ Access token found in cookie for webhook creation
+🔧 Environment check: {
+  hasApiKey: true,
+  hasApiSecret: true,
+  hasRedirectUri: true,
+  tokenType: 'string'
+}
+[2025-07-25T12:07:01.439Z] [INFO] [TRELLO] TrelloOAuth initialized {
+  apiKey: '570e525c...',
+  redirectUri: 'https://localhost:3000/auth/trello/callback',
+  scopes: [ 'read', 'write', 'account' ],
+  expiration: 'never'
+}
+🔗 Creating webhook: {
+  url: 'https://api.trello.com/1/tokens/ATTAdbc76f04f59e95a66165ad04c2b13d3657aef46d30ca2f11964dd542326958fc074A895E/webhooks',
+  idModel: '60bde67c0a22da4cf95ece9b',
+  callbackURL: 'https://localhost:3000/api/trello/webhooks/callback',
+  description: 'CS Agent Dashboard - Activity Monitor (Auto-registered)'
+}
+❌ Trello API webhook creation error: 400 {"message":"URL (https://localhost:3000/api/trello/webhooks/callback) not reachable. AbortError: Proxy response (403) !== 200 when HTTP Tunneling","error":"VALIDATOR_URL_NOT_REACHABLE"}
+❌ OAuth webhook creation error: Error: Webhook creation failed: 400 - {"message":"URL (https://localhost:3000/api/trello/webhooks/callback) not reachable. AbortError: Proxy response (403) !== 200 when HTTP Tunneling","error":"VALIDATOR_URL_NOT_REACHABLE"}
+    at POST (webpack-internal:///(rsc)/./app/api/trello/webhooks/route.ts:188:27)
+    at async Server.<anonymous> (D:\CS_Agent\chat-dashboard\server.js:33:7)
+❌ Error creating Trello webhook: Error: Webhook creation failed: 400 - {"message":"URL (https://localhost:3000/api/trello/webhooks/callback) not reachable. AbortError: Proxy response (403) !== 200 when HTTP Tunneling","error":"VALIDATOR_URL_NOT_REACHABLE"}
+    at POST (webpack-internal:///(rsc)/./app/api/trello/webhooks/route.ts:188:27)
+    at async Server.<anonymous> (D:\CS_Agent\chat-dashboard\server.js:33:7)
+🔍 Webhook creation error details: {
+  message: 'Webhook creation failed: 400 - {"message":"URL (https://localhost:3000/api/trello/webhooks/callback) not reachable. AbortError: Proxy response (403) !== 200 when HTTP Tunneling","error":"VALIDATOR_URL_NOT_REACHABLE"}',
+  details: 'Error: Webhook creation failed: 400 - {"message":"URL (https://localhost:3000/api/trello/webhooks/callback) not reachable. AbortError: Proxy response (403) !== 200 when HTTP Tunneling","error":"VALIDATOR_URL_NOT_REACHABLE"}\n' +
+    '    at POST (webpack-internal:///(rsc)/./app/api/trello/webhooks/route.ts:188:27)\n' +      
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +     
+    '    at async AppRouteRouteModule.do (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:5:38782)\n' +
+    '    at async AppRouteRouteModule.handle (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:5:45984)\n' +
+    '    at async responseGenerator (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Ftrello%2Fwebhooks%2Froute&page=%2Fapi%2Ftrello%2Fwebhooks%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Ftrello%2Fwebhooks%2Froute.ts&appDir=D%3A%5CCS_Agent%5Cchat-dashboard%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CCS_Agent%5Cchat-dashboard&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:203:38)\n' +
+    '    at async AppRouteRouteModule.handleResponse (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:1:183647)\n' +
+    '    at async handleResponse (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Ftrello%2Fwebhooks%2Froute&page=%2Fapi%2Ftrello%2Fwebhooks%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Ftrello%2Fwebhooks%2Froute.ts&appDir=D%3A%5CCS_Agent%5Cchat-dashboard%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CCS_Agent%5Cchat-dashboard&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:265:32)\n' +
+    '    at async handler (webpack-internal:///(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2Fapi%2Ftrello%2Fwebhooks%2Froute&page=%2Fapi%2Ftrello%2Fwebhooks%2Froute&appPaths=&pagePath=private-next-app-dir%2Fapi%2Ftrello%2Fwebhooks%2Froute.ts&appDir=D%3A%5CCS_Agent%5Cchat-dashboard%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=D%3A%5CCS_Agent%5Cchat-dashboard&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D&isGlobalNotFoundEnabled=!:317:13)\n' +
+    '    at async doRender (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:1586:34)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:1928:13)\n' +
+    '    at async DevServer.renderPageComponent (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:2394:24)\n' +
+    '    at async DevServer.renderToResponseImpl (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:2434:32)\n' +
+    '    at async DevServer.pipeImpl (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:1034:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\next-server.js:391:17)\n' +
+    '    at async DevServer.handleRequestImpl (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\base-server.js:925:17)\n' +
+    '    at async D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:398:20\n' +
+    '    at async Span.traceAsyncFn (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n' +
+    '    at async DevServer.handleRequest (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:394:24)\n' +
+    '    at async invokeRender (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\lib\\router-server.js:239:21)\n' +
+    '    at async handleRequest (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\lib\\router-server.js:436:24)\n' +
+    '    at async NextCustomServer.requestHandlerImpl (D:\\CS_Agent\\chat-dashboard\\node_modules\\next\\dist\\server\\lib\\router-server.js:464:13)\n' +
+    '    at async Server.<anonymous> (D:\\CS_Agent\\chat-dashboard\\server.js:33:7)'
+}
+ POST /api/trello/webhooks?useOAuth=true 500 in 755ms

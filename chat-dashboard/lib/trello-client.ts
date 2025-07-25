@@ -220,8 +220,9 @@ class TrelloApiClient {
       this.authMode = 'oauth';
       try {
         this.trelloOAuth = createTrelloOAuth();
+        console.log('🔍 OAuth client created successfully');
       } catch (error) {
-        console.warn('OAuth not configured, falling back to API key mode');
+        console.warn('🔧 OAuth not configured, falling back to API key mode:', error);
         this.authMode = 'api_key';
       }
     }
@@ -523,14 +524,32 @@ class TrelloApiClient {
 
   // Webhook operations
   async createWebhook(idModel: string, callbackURL: string, description: string = 'Trello Webhook'): Promise<TrelloWebhook> {
-    return this.makeRequest<TrelloWebhook>('/webhooks', {
-      method: 'POST',
-      body: JSON.stringify({
-        idModel,
-        callbackURL,
-        description
-      })
-    });
+    // According to Atlassian documentation, webhooks should be created using the token endpoint
+    if (this.authMode === 'oauth' && this.trelloOAuth) {
+      const accessToken = this.trelloOAuth.getStoredAccessToken();
+      if (!accessToken) {
+        throw new Error('No OAuth token available for webhook creation');
+      }
+      return this.makeRequest<TrelloWebhook>(`/tokens/${accessToken.oauth_token}/webhooks`, {
+        method: 'POST',
+        body: JSON.stringify({
+          idModel,
+          callbackURL,
+          description
+        })
+      });
+    } else if (this.token) {
+      return this.makeRequest<TrelloWebhook>(`/tokens/${this.token}/webhooks`, {
+        method: 'POST',
+        body: JSON.stringify({
+          idModel,
+          callbackURL,
+          description
+        })
+      });
+    } else {
+      throw new Error('No token available for webhook creation');
+    }
   }
 
   async getWebhooks(): Promise<TrelloWebhook[]> {
@@ -551,6 +570,26 @@ class TrelloApiClient {
     await this.makeRequest(`/webhooks/${webhookId}`, {
       method: 'DELETE'
     });
+  }
+
+  /**
+   * Get webhook by ID - useful for health checks
+   */
+  async getWebhook(webhookId: string): Promise<TrelloWebhook> {
+    return this.makeRequest<TrelloWebhook>(`/webhooks/${webhookId}`);
+  }
+
+  /**
+   * Check if webhook is active and healthy
+   */
+  async isWebhookHealthy(webhookId: string): Promise<boolean> {
+    try {
+      const webhook = await this.getWebhook(webhookId);
+      return webhook.active;
+    } catch (error) {
+      console.warn('Webhook health check failed:', error);
+      return false;
+    }
   }
 
   // Search
