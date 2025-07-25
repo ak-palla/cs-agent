@@ -232,6 +232,10 @@ export default function MattermostChat() {
   const [sidebarWidth, setSidebarWidth] = useState(240); // Default 240px (w-60)
   const [isResizing, setIsResizing] = useState(false);
   
+  // Mobile responsiveness state
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<NodeJS.Timeout | null>(null);
@@ -383,6 +387,24 @@ export default function MattermostChat() {
       setError('Please enter your Personal Access Token');
     }
   }, []); // Remove dependencies to prevent infinite re-renders
+
+  // Mobile view detection and responsive behavior
+  useEffect(() => {
+    const checkMobileView = () => {
+      const isMobile = window.innerWidth < 768; // md breakpoint
+      setIsMobileView(isMobile);
+      
+      // Auto-hide sidebar on mobile when channel is selected
+      if (isMobile && currentChannel) {
+        setShowMobileSidebar(false);
+      }
+    };
+
+    checkMobileView();
+    window.addEventListener('resize', checkMobileView);
+    
+    return () => window.removeEventListener('resize', checkMobileView);
+  }, [currentChannel]);
 
   // WebSocket event handlers
   useEffect(() => {
@@ -545,31 +567,9 @@ export default function MattermostChat() {
           const existingMessageIds = new Set(messages.map(msg => msg.id));
           const newMessages = latestMessages.filter(msg => !existingMessageIds.has(msg.id));
           
-          // Store activities for new messages (since WebSocket is disabled in localhost)
-          for (const message of newMessages) {
-            const success = await storeActivitySafely({
-              platform: 'mattermost',
-              event_type: 'message_posted',
-              user_id: message.user_id,
-              channel_id: message.channel_id,
-              data: {
-                message_id: message.id,
-                message: message.message,
-                type: message.type,
-                props: message.props,
-                root_id: message.root_id,
-                parent_id: message.parent_id,
-                create_at: message.create_at,
-                update_at: message.update_at,
-                source: 'polling'
-              },
-              timestamp: new Date(message.create_at).toISOString()
-            });
-            
-            if (!success) {
-              break; // Stop trying if activity storage is disabled
-            }
-          }
+          // NOTE: Activity storage removed from current channel polling to prevent duplicates
+          // Global polling handles activity storage for ALL channels (including current)
+          // This eliminates the duplicate storage problem
           
           // Current channel notifications are handled by global polling to avoid duplicates
           if (debugEnabled && newMessages.length > 0 && Math.random() < 0.2) {
@@ -1225,20 +1225,9 @@ export default function MattermostChat() {
       const result = await response.json();
       console.log('✅ Message sent successfully:', result);
 
-      // Store activity for sent message (since WebSocket is disabled in localhost)
-      await storeActivitySafely({
-        platform: 'mattermost',
-        event_type: 'message_posted',
-        user_id: currentUser?.id,
-        channel_id: currentChannel,
-        data: {
-          message_id: result.id,
-          message: messageData.message,
-          file_ids: messageData.file_ids || [],
-          source: 'sent_message'
-        },
-        timestamp: new Date().toISOString()
-      });
+      // NOTE: Activity storage removed from sent message handler to prevent duplicates
+      // Global polling will detect and store this message as an activity automatically
+      // This eliminates duplicate storage when users send messages
 
       // Clear form only after successful send
       setNewMessage('');
@@ -1915,11 +1904,23 @@ export default function MattermostChat() {
 }
 
   return (
-    <div className="flex h-full bg-gray-100">
+    <div className="flex h-screen bg-gray-100 relative">
       {/* Top Header */}
-      <div className="fixed top-0 left-0 right-0 h-14 bg-[#1e1e2e] text-white border-b border-gray-600 z-50 flex items-center">
+      <div className="fixed top-0 left-16 right-0 h-14 bg-[#1e1e2e] text-white border-b border-gray-600 z-50 flex items-center">
+        {/* Mobile Menu Button */}
+        {isMobileView && (
+          <button
+            onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+            className="p-3 text-white hover:bg-gray-700 md:hidden"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
+        
         {/* Left: Mattermost Logo and Badge */}
-        <div className="flex items-center px-4 mr-6">
+        <div className={`flex items-center ${isMobileView ? 'px-2 mr-2' : 'px-4 mr-6'}`}>
           <div className="flex items-center space-x-2">
             {/* Mattermost Icon */}
             <div className="w-6 h-6 mr-3">
@@ -1927,24 +1928,24 @@ export default function MattermostChat() {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
             </div>
-            <span className="text-white font-medium">Mattermost</span>
-            <span className="ml-2 text-xs bg-blue-500 px-2 py-1 rounded text-white">FREE EDITION</span>
+            <span className={`text-white font-medium ${isMobileView ? 'hidden sm:inline' : ''}`}>Mattermost</span>
+            <span className={`ml-2 text-xs bg-blue-500 px-2 py-1 rounded text-white ${isMobileView ? 'hidden sm:inline' : ''}`}>FREE EDITION</span>
           </div>
         </div>
 
         {/* Center: Search */}
-        <div className="flex-1 max-w-md mx-4">
+        <div className={`flex-1 max-w-md ${isMobileView ? 'mx-2' : 'mx-4'}`}>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search"
+              placeholder={isMobileView ? "Search..." : "Search"}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 handleSearch(e.target.value);
               }}
-              className="w-full bg-gray-700 text-white pl-10 pr-4 py-2 rounded focus:bg-gray-600 focus:outline-none placeholder-gray-400"
+              className={`w-full bg-gray-700 text-white pl-10 pr-4 py-2 rounded focus:bg-gray-600 focus:outline-none placeholder-gray-400 ${isMobileView ? 'text-sm' : ''}`}
             />
             {isSearching && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -1955,25 +1956,25 @@ export default function MattermostChat() {
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center space-x-2 px-4">
+        <div className={`flex items-center space-x-2 ${isMobileView ? 'px-2' : 'px-4'}`}>
           {/* Connection Status */}
           <div className="flex items-center space-x-2">
             {connectionStatus === 'connected' && (
               <div className="flex items-center space-x-1 text-green-400" title="WebSocket real-time connection active (enhanced mode)">
                 <Wifi className="h-4 w-4" />
-                <span className="text-xs">Enhanced</span>
+                <span className={`text-xs ${isMobileView ? 'hidden' : ''}`}>Enhanced</span>
               </div>
             )}
             {connectionStatus !== 'connected' && connectionStatus !== 'connecting' && (
               <div className="flex items-center space-x-1 text-blue-400" title="Polling mode active (default mode)">
                 <div className="animate-pulse h-4 w-4 bg-blue-400 rounded-full"></div>
-                <span className="text-xs">Polling</span>
+                <span className={`text-xs ${isMobileView ? 'hidden' : ''}`}>Polling</span>
               </div>
             )}
             {connectionStatus === 'connecting' && (
               <div className="flex items-center space-x-1 text-yellow-400" title="Attempting WebSocket connection (enhanced mode)">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-400"></div>
-                <span className="text-xs">Connecting</span>
+                <span className={`text-xs ${isMobileView ? 'hidden' : ''}`}>Connecting</span>
               </div>
             )}
           </div>
@@ -2130,13 +2131,27 @@ export default function MattermostChat() {
         </div>
       </div>
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobileView && showMobileSidebar && (
+        <div 
+          className="fixed top-0 left-16 right-0 bottom-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <div className="flex w-full pt-14">
+      <div className="flex w-full h-full pt-14">
         {/* Left Sidebar */}
         <div 
           ref={sidebarRef}
-          className="bg-[#2d3748] text-white flex flex-col border-r border-gray-600 relative"
-          style={{ width: `${sidebarWidth}px`, minWidth: '180px', maxWidth: '400px' }}
+          className={`
+            bg-[#2d3748] text-white flex flex-col border-r border-gray-600 relative transition-transform duration-300 ease-in-out
+            ${isMobileView 
+              ? `fixed top-14 left-16 bottom-0 z-50 w-80 transform ${showMobileSidebar ? 'translate-x-0' : '-translate-x-full'}`
+              : 'relative'
+            }
+          `}
+          style={!isMobileView ? { width: `${sidebarWidth}px`, minWidth: '180px', maxWidth: '400px' } : {}}
         >
           {/* Team Info */}
           <div className="p-4 border-b border-gray-600 flex-shrink-0">
@@ -2206,11 +2221,14 @@ export default function MattermostChat() {
                   <button
                     key={channel.id}
                     onClick={() => switchToChannel(channel.id)}
-                    className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center justify-between group ${
-                      currentChannel === channel.id 
-                        ? 'bg-blue-600 text-white' 
-                        : 'text-gray-300 hover:bg-gray-600 hover:text-white'
-                    }`}
+                    className={`
+                      w-full text-left px-3 py-2 rounded-lg text-sm font-medium
+                      transition-all duration-200 ease-out flex items-center justify-between group
+                      ${currentChannel === channel.id 
+                        ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-500/20' 
+                        : 'text-gray-300 hover:bg-gray-600/70 hover:text-white hover:shadow-sm'
+                      }
+                    `}
                   >
                     <div className="flex items-center min-w-0">
                       <Hash className="h-4 w-4 mr-2 flex-shrink-0" />
@@ -2263,11 +2281,14 @@ export default function MattermostChat() {
                   <button
                     key={dm.id}
                     onClick={() => switchToChannel(dm.id)}
-                    className={`w-full text-left px-3 py-1.5 rounded text-sm transition-colors flex items-center justify-between group ${
-                      currentChannel === dm.id 
-                        ? 'bg-blue-600 text-white' 
-                        : 'text-gray-300 hover:bg-gray-600 hover:text-white'
-                    }`}
+                    className={`
+                      w-full text-left px-3 py-2 rounded-lg text-sm font-medium
+                      transition-all duration-200 ease-out flex items-center justify-between group
+                      ${currentChannel === dm.id 
+                        ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-500/20' 
+                        : 'text-gray-300 hover:bg-gray-600/70 hover:text-white hover:shadow-sm'
+                      }
+                    `}
                   >
                     <div className="flex items-center min-w-0">
                       <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
@@ -2442,9 +2463,9 @@ export default function MattermostChat() {
         </div>
 
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col min-h-0 bg-white">
+        <div className="flex-1 flex flex-col min-h-0 bg-white shadow-lg border-l border-gray-200">
           {/* Channel Header */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3 flex-shrink-0">
+          <div className={`bg-white border-b border-gray-200 ${isMobileView ? 'px-3 py-2' : 'px-4 py-3'} flex-shrink-0`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center min-w-0 flex-1">
                 {(() => {
@@ -2521,7 +2542,7 @@ export default function MattermostChat() {
           {/* Messages Area */}
           <div 
             ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto bg-white"
+            className="flex-1 overflow-y-auto bg-gradient-to-b from-white to-gray-50/30"
           >
             {/* Loading older messages indicator */}
             {loadingOlderMessages && (
@@ -2598,23 +2619,28 @@ export default function MattermostChat() {
                         messageRefs.current.delete(message.id);
                       }
                     }}
-                    className={`group hover:bg-gray-50 -mx-4 px-4 rounded-md transition-all duration-500 ${
-                      isGrouped ? 'py-0.5' : 'py-2 mt-3'
-                    } ${
-                      highlightedMessageId === message.id 
-                        ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 border-l-4 border-l-yellow-400 shadow-md ring-2 ring-yellow-300/50' 
-                        : ''
-                    }`}
+                    className={`
+                      group hover:bg-gray-50/80 transition-all duration-300 ease-out
+                      ${isMobileView ? '-mx-3 px-3 rounded-lg' : '-mx-4 px-4 rounded-md'}
+                      ${isGrouped 
+                        ? `${isMobileView ? 'py-0.5' : 'py-1'}` 
+                        : `${isMobileView ? 'py-2 mt-2' : 'py-3 mt-4'}`
+                      }
+                      ${highlightedMessageId === message.id 
+                        ? 'bg-gradient-to-r from-yellow-100 to-yellow-50 border-l-4 border-l-yellow-400 shadow-lg ring-2 ring-yellow-300/50' 
+                        : 'hover:shadow-sm'
+                      }
+                    `}
                   >
                     <div className="flex items-start">
                       {/* Avatar Column */}
-                      <div className="w-10 mr-3 flex-shrink-0 mt-0.5">
+                      <div className={`${isMobileView ? 'w-8 mr-2' : 'w-10 mr-3'} flex-shrink-0 mt-0.5`}>
                         {!isGrouped ? (
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                          <div className={`${isMobileView ? 'w-7 h-7' : 'w-9 h-9'} rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold ${isMobileView ? 'text-xs' : 'text-sm'}`}>
                             {displayName[0]?.toUpperCase() || '?'}
                           </div>
                         ) : (
-                          <div className="w-9 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className={`${isMobileView ? 'w-7 h-5' : 'w-9 h-5'} flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}>
                             <span className="text-xs text-gray-400">
                               {timeString}
                             </span>
@@ -2626,21 +2652,21 @@ export default function MattermostChat() {
                       <div className="flex-1 min-w-0">
                         {/* Header - only show for non-grouped messages */}
                         {!isGrouped && (
-                          <div className="flex items-baseline space-x-2 mb-1">
-                            <button className="font-semibold text-gray-900 text-sm hover:underline">
+                          <div className={`flex items-baseline space-x-2 ${isMobileView ? 'mb-0.5' : 'mb-1'}`}>
+                            <button className={`font-semibold text-gray-900 hover:underline transition-colors ${isMobileView ? 'text-sm' : 'text-base'}`}>
                               {displayName}
                             </button>
-                            <span className="text-xs text-gray-500">
+                            <span className={`${isMobileView ? 'text-xs' : 'text-sm'} text-gray-500 font-medium`}>
                               {dateTimeString}
                             </span>
                           </div>
                         )}
                         
                         {/* Message Text */}
-                        <div className="text-gray-800 text-sm leading-relaxed break-words">
+                        <div className={`text-gray-800 leading-relaxed break-words ${isMobileView ? 'text-sm' : 'text-base'}`}>
                           <MessageRenderer
                             content={message.message}
-                            className=""
+                            className="enhanced-message-content"
                           />
                         </div>
                         
@@ -2712,7 +2738,7 @@ export default function MattermostChat() {
           </div>
 
           {/* Message Input */}
-          <div className="bg-white border-t border-gray-200 px-4 py-3 flex-shrink-0">
+          <div className={`bg-white border-t border-gray-200 ${isMobileView ? 'px-3 py-2' : 'px-4 py-3'} flex-shrink-0`}>
             {currentChannel ? (
               <div className="space-y-3">
                 {/* Error Display */}

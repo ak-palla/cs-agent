@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X, Activity, Workflow, Zap, Users, BarChart3, RefreshCw, Search, Filter, Download, Play, Pause, Settings, AlertTriangle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
 import { activityProcessor } from '@/lib/activity-processor';
+import EnhancedActivityCard from '@/components/EnhancedActivityCard';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -108,29 +109,6 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
       flock: '🐦'
     };
     return icons[platform as keyof typeof icons] || '❓';
-  };
-
-  const getPlatformColor = (platform: string) => {
-    const colors = {
-      mattermost: 'bg-blue-100 text-blue-800',
-      trello: 'bg-green-100 text-green-800',
-      flock: 'bg-purple-100 text-purple-800'
-    };
-    return colors[platform as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getStatusColor = (status: string) => {
-    const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      running: 'bg-blue-100 text-blue-800',
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800'
-    };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
-
-  const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleString();
   };
 
   const filteredActivities = recentActivities.filter(activity => {
@@ -335,35 +313,18 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
               <div className="flex-1 overflow-y-auto">
                 <div className="space-y-3">
                   {filteredActivities.map((activity) => (
-                    <div key={activity.id} className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-3">
-                          <div className="text-2xl">{getPlatformIcon(activity.platform)}</div>
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPlatformColor(activity.platform)}`}>
-                                {activity.platform}
-                              </span>
-                              <span className="font-medium text-gray-900">{activity.event_type}</span>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-2">{formatTimestamp(activity.timestamp)}</p>
-                            {activity.user_id && (
-                              <p className="text-xs text-gray-500">User: {activity.user_id}</p>
-                            )}
-                            {activity.channel_id && (
-                              <p className="text-xs text-gray-500">Channel: {activity.channel_id}</p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {activity.processed ? (
-                            <CheckCircle className="w-5 h-5 text-green-500" title="Processed" />
-                          ) : (
-                            <Clock className="w-5 h-5 text-yellow-500" title="Pending" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <EnhancedActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      onViewMessage={(channelId, messageId) => {
+                        // Optional: Add functionality to view message in channel
+                        console.log('View message:', channelId, messageId);
+                      }}
+                      onViewChannel={(channelId) => {
+                        // Optional: Add functionality to view channel
+                        console.log('View channel:', channelId);
+                      }}
+                    />
                   ))}
                 </div>
               </div>

@@ -34,11 +34,18 @@ export async function resolveUserName(userId: string): Promise<string> {
     return formatUserDisplayName(user);
   }
 
+  // Check if we have a token - if not, return fallback immediately
+  const token = localStorage.getItem('mattermost_token');
+  if (!token) {
+    console.warn('No Mattermost token available for user resolution');
+    return `User-${userId.slice(-8)}`;
+  }
+
   try {
     // Fetch user data from API
     const response = await fetch(`/api/mattermost/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('mattermost_token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -46,12 +53,17 @@ export async function resolveUserName(userId: string): Promise<string> {
       const user: User = await response.json();
       userCache.set(userId, user);
       return formatUserDisplayName(user);
+    } else if (response.status === 401) {
+      console.warn('Authentication failed when resolving user:', userId);
+      return `User-${userId.slice(-8)} (auth failed)`;
+    } else {
+      console.warn('Failed to resolve user (status:', response.status, '):', userId);
     }
   } catch (error) {
     console.warn('Failed to resolve user:', userId, error);
   }
 
-  // Fallback to shortened ID if resolution fails
+  // Improved fallback to shortened ID with better formatting
   return `User-${userId.slice(-8)}`;
 }
 
@@ -79,11 +91,18 @@ export async function resolveChannelName(channelId: string): Promise<string> {
     return formatChannelDisplayName(channel);
   }
 
+  // Check if we have a token - if not, return fallback immediately
+  const token = localStorage.getItem('mattermost_token');
+  if (!token) {
+    console.warn('No Mattermost token available for channel resolution');
+    return `#${channelId.slice(-8)}`;
+  }
+
   try {
     // Fetch channel data from API
     const response = await fetch(`/api/mattermost/channels/${channelId}`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('mattermost_token')}`,
+        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -91,13 +110,18 @@ export async function resolveChannelName(channelId: string): Promise<string> {
       const channel: Channel = await response.json();
       channelCache.set(channelId, channel);
       return formatChannelDisplayName(channel);
+    } else if (response.status === 401) {
+      console.warn('Authentication failed when resolving channel:', channelId);
+      return `#${channelId.slice(-8)} (auth failed)`;
+    } else {
+      console.warn('Failed to resolve channel (status:', response.status, '):', channelId);
     }
   } catch (error) {
     console.warn('Failed to resolve channel:', channelId, error);
   }
 
-  // Fallback to shortened ID if resolution fails
-  return `Channel-${channelId.slice(-8)}`;
+  // Improved fallback to shortened ID with better formatting
+  return `#${channelId.slice(-8)}`;
 }
 
 /**
@@ -116,12 +140,31 @@ export function getMessagePreview(data: any, maxLength: number = 100): string {
   if (!data) return '';
   
   // Try different possible message fields
-  const message = data.message || data.text || data.content || '';
+  let message = data.message || data.text || data.content || '';
   
-  if (!message) return '';
+  // For system messages, try to extract meaningful content
+  if (!message && data.props) {
+    if (data.props.username) {
+      message = `User ${data.props.username} joined the channel`;
+    } else if (data.props.old_displayname && data.props.new_displayname) {
+      message = `Display name changed from ${data.props.old_displayname} to ${data.props.new_displayname}`;
+    }
+  }
   
-  // Clean up the message (remove markdown, extra whitespace)
-  const cleaned = message
+  // For webhook messages, try to get the message content
+  if (!message && data.webhook_display_name) {
+    message = `Webhook message from ${data.webhook_display_name}`;
+  }
+  
+  if (!message) {
+    // If still no message, try to create a meaningful preview from the event data
+    if (data.post_id) return 'Message activity';
+    if (data.file_ids && data.file_ids.length > 0) return `${data.file_ids.length} file(s) shared`;
+    return '';
+  }
+  
+  // Convert to string and clean up the message (remove markdown, extra whitespace)
+  const cleaned = String(message)
     .replace(/[*_`~]/g, '') // Remove markdown formatting
     .replace(/\s+/g, ' ')   // Normalize whitespace
     .trim();
@@ -209,11 +252,36 @@ export function clearResolverCaches(): void {
 }
 
 /**
+ * Check if Mattermost authentication is available
+ */
+export function isAuthenticationAvailable(): boolean {
+  return !!localStorage.getItem('mattermost_token');
+}
+
+/**
+ * Get authentication status message for display
+ */
+export function getAuthenticationStatus(): { available: boolean; message: string } {
+  const token = localStorage.getItem('mattermost_token');
+  if (token) {
+    return { available: true, message: 'Mattermost authentication available' };
+  } else {
+    return { 
+      available: false, 
+      message: 'No Mattermost token found. User and channel names will show as IDs. To see real names, authenticate with Mattermost first.' 
+    };
+  }
+}
+
+/**
  * Preload user and channel data into cache
  */
 export async function preloadUserAndChannelData(): Promise<void> {
   const token = localStorage.getItem('mattermost_token');
-  if (!token) return;
+  if (!token) {
+    console.info('No Mattermost token available - skipping user/channel data preload');
+    return;
+  }
 
   try {
     // Fetch users and channels in parallel
@@ -229,11 +297,13 @@ export async function preloadUserAndChannelData(): Promise<void> {
     if (usersResponse.ok) {
       const users: User[] = await usersResponse.json();
       users.forEach(user => userCache.set(user.id, user));
+      console.log(`Preloaded ${users.length} users into cache`);
     }
 
     if (channelsResponse.ok) {
       const channels: Channel[] = await channelsResponse.json();
       channels.forEach(channel => channelCache.set(channel.id, channel));
+      console.log(`Preloaded ${channels.length} channels into cache`);
     }
   } catch (error) {
     console.warn('Failed to preload user/channel data:', error);

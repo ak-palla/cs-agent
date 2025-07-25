@@ -20,21 +20,19 @@ export default function MattermostPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto py-8 px-4">
-        {!isAuthenticated ? (
-          <div className="max-w-md mx-auto">
+    <div className="h-screen bg-gray-100">
+      {!isAuthenticated ? (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+          <div className="max-w-md mx-auto px-4">
             <MattermostOAuthLogin 
               onSuccess={handleAuthSuccess}
               onError={handleAuthError}
             />
           </div>
-        ) : (
-          <div className="h-screen bg-white rounded-lg shadow-lg overflow-hidden">
-            <MattermostChat />
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <MattermostChat />
+      )}
     </div>
   );
 }

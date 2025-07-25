@@ -37,7 +37,7 @@ export class ServerActivityProcessor {
   }
 
   /**
-   * Store a platform activity in Supabase
+   * Store a platform activity in Supabase with deduplication
    */
   async storeActivity(activityData: ActivityData): Promise<StandardizedActivity | null> {
     const startTime = Date.now();
@@ -45,43 +45,99 @@ export class ServerActivityProcessor {
       const supabase = this.getServiceClient(); // Use service client for system operations
       const standardizedActivity = this.standardizeActivity(activityData);
       
-      mattermostLogger.debug('Storing activity', {
+      mattermostLogger.debug('Storing activity with deduplication', {
         platform: activityData.platform,
         eventType: activityData.event_type,
         userId: activityData.user_id,
-        channelId: activityData.channel_id
+        channelId: activityData.channel_id,
+        messageId: activityData.data?.message_id
       });
 
+      // First, check if this activity already exists (client-side deduplication)
+      const messageId = activityData.data?.message_id;
+      if (messageId && activityData.event_type === 'message_posted') {
+        const { data: existingActivity } = await supabase
+          .from('activities')
+          .select('id, created_at')
+          .eq('platform', activityData.platform)
+          .eq('event_type', activityData.event_type)
+          .eq('message_id', messageId)
+          .single();
+
+        if (existingActivity) {
+          mattermostLogger.debug('Activity already exists, skipping duplicate', {
+            existingId: existingActivity.id,
+            messageId: messageId
+          });
+          return {
+            ...standardizedActivity,
+            id: existingActivity.id,
+            timestamp: existingActivity.created_at
+          } as StandardizedActivity;
+        }
+      }
+
+      // Try to insert using the safe function from our migration
       const { data, error } = await supabase
-        .from('activities')
-        .insert(standardizedActivity)
-        .select()
-        .single();
+        .rpc('insert_activity_safe', {
+          p_platform: standardizedActivity.platform,
+          p_event_type: standardizedActivity.event_type,
+          p_user_id: standardizedActivity.user_id,
+          p_channel_id: standardizedActivity.channel_id,
+          p_data: standardizedActivity.data,
+          p_timestamp: standardizedActivity.timestamp
+        });
 
       const duration = Date.now() - startTime;
 
       if (error) {
         databaseLogger.databaseOperation('INSERT', 'activities', false, duration, error);
-        mattermostLogger.error('Error storing activity', { 
+        mattermostLogger.error('Error storing activity with deduplication', { 
           error: error.message,
           code: error.code,
-          activityType: activityData.event_type 
+          activityType: activityData.event_type,
+          messageId: activityData.data?.message_id
+        });
+        return null;
+      }
+
+      if (!data) {
+        mattermostLogger.warn('Safe insert returned null, likely duplicate handled at database level', {
+          eventType: activityData.event_type,
+          messageId: activityData.data?.message_id
+        });
+        return null;
+      }
+
+      // Fetch the complete activity record
+      const { data: completeActivity, error: fetchError } = await supabase
+        .from('activities')
+        .select('*')
+        .eq('id', data)
+        .single();
+
+      if (fetchError || !completeActivity) {
+        mattermostLogger.error('Error fetching stored activity', { 
+          error: fetchError?.message,
+          activityId: data
         });
         return null;
       }
 
       databaseLogger.databaseOperation('INSERT', 'activities', true, duration);
-      mattermostLogger.info('Activity stored successfully', {
-        activityId: data.id,
-        eventType: data.event_type,
-        platform: data.platform,
-        duration
+      mattermostLogger.info('Activity stored successfully with deduplication', {
+        activityId: completeActivity.id,
+        eventType: completeActivity.event_type,
+        platform: completeActivity.platform,
+        messageId: completeActivity.message_id,
+        duration,
+        wasNewRecord: true
       });
       
       // Trigger workflow evaluation for this activity
-      await this.evaluateWorkflowTriggers(data);
+      await this.evaluateWorkflowTriggers(completeActivity);
       
-      return data;
+      return completeActivity;
     } catch (error) {
       const duration = Date.now() - startTime;
       databaseLogger.databaseOperation('INSERT', 'activities', false, duration, error);
