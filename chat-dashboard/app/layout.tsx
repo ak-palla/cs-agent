@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Sidebar from "@/components/Sidebar";
+import ZoomFix from "@/components/ZoomFix";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import "./globals.css";
@@ -12,8 +14,15 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "CS Agent Dashboard",
+  description: "Multi-platform chat and project management dashboard",
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 const geistSans = Geist({
@@ -29,7 +38,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <head />
+      <body className={`${geistSans.className} antialiased min-h-screen`}>
         <WebSocketProvider>
           <NotificationProvider>
             <ThemeProvider
@@ -38,11 +48,12 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-            <div className="flex h-screen">
+            <div className="flex h-screen zoom-reset">
               <Sidebar />
-              <main className="flex-1 overflow-hidden">
+              <main className="flex-1 overflow-hidden responsive-container">
                 {children}
               </main>
+              <ZoomFix />
             </div>
             </ThemeProvider>
           </NotificationProvider>

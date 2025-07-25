@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Activity, Workflow, Zap, Users, BarChart3, RefreshCw, Search, Filter, Download, Play, Pause, Settings, AlertTriangle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import { X, Activity, Workflow, Zap, Users, BarChart3, RefreshCw, Search, Filter, Download, Play, Pause, Settings, AlertTriangle, CheckCircle, Clock, TrendingUp, Shield, Link, ExternalLink } from 'lucide-react';
 import { activityProcessor } from '@/lib/activity-processor';
 import EnhancedActivityCard from '@/components/EnhancedActivityCard';
+import TrelloOAuthLogin from '@/components/TrelloOAuthLogin';
+import { TrelloOAuthClient } from '@/lib/trello-oauth-client';
+import { createTrelloClientWithOAuth } from '@/lib/trello-client';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -57,6 +60,12 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState<string>('all');
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d'>('24h');
+  const [connectionStatus, setConnectionStatus] = useState<{
+    mattermost: boolean;
+    trello: boolean;
+    flock: boolean;
+  }>({ mattermost: false, trello: false, flock: false });
+  const [showTrelloOAuth, setShowTrelloOAuth] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -91,6 +100,9 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
         failed: 9
       });
 
+      // Check connection status for all platforms
+      await checkConnectionStatus();
+
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -100,6 +112,43 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
 
   const handleRefresh = () => {
     loadDashboardData();
+  };
+
+  const checkConnectionStatus = async () => {
+    try {
+      // Check Trello OAuth status
+      let trelloConnected = false;
+      try {
+        const trelloOAuth = new TrelloOAuthClient();
+        trelloConnected = trelloOAuth.isAuthenticated();
+        if (trelloConnected) {
+          // Test the connection via health check
+          const response = await fetch('/api/trello/health', {
+            credentials: 'include' // Include cookies for Trello OAuth
+          });
+          const health = await response.json();
+          trelloConnected = health.authenticated;
+        }
+      } catch (error) {
+        console.warn('Trello OAuth not configured:', error);
+      }
+
+      // Check Mattermost connection (placeholder)
+      const mattermostConnected = !!document.cookie
+        .split('; ')
+        .find(row => row.startsWith('mattermost_user='));
+
+      // Check Flock connection (placeholder)
+      const flockConnected = false; // Would check Flock auth status
+
+      setConnectionStatus({
+        mattermost: mattermostConnected,
+        trello: trelloConnected,
+        flock: flockConnected
+      });
+    } catch (error) {
+      console.error('Error checking connection status:', error);
+    }
   };
 
   const getPlatformIcon = (platform: string) => {
@@ -125,8 +174,8 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-7xl h-[95vh] sm:h-[90vh] flex flex-col zoom-reset">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
@@ -227,7 +276,7 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
               </div>
 
               {/* Platform Breakdown */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="bg-white rounded-lg border border-gray-200 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Activity by Platform</h3>
                   <div className="space-y-4">
@@ -248,6 +297,56 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Platform Connections</h3>
+                  <div className="space-y-4">
+                    {[
+                      { platform: 'mattermost', name: 'Mattermost', connected: connectionStatus.mattermost },
+                      { platform: 'trello', name: 'Trello', connected: connectionStatus.trello },
+                      { platform: 'flock', name: 'Flock', connected: connectionStatus.flock }
+                    ].map(({ platform, name, connected }) => (
+                      <div key={platform} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">{getPlatformIcon(platform)}</span>
+                          <span className="font-medium">{name}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {connected ? (
+                            <div className="flex items-center space-x-2 text-green-600">
+                              <CheckCircle className="w-4 h-4" />
+                              <span className="text-sm font-medium">Connected</span>
+                              <Shield className="w-4 h-4" />
+                            </div>
+                          ) : (
+                            <div className="flex items-center space-x-2">
+                              <AlertTriangle className="w-4 h-4 text-red-500" />
+                              <span className="text-sm text-red-600 font-medium">Not Connected</span>
+                              {platform === 'trello' && (
+                                <button
+                                  onClick={() => setShowTrelloOAuth(true)}
+                                  className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors flex items-center space-x-1"
+                                >
+                                  <Link className="w-3 h-3" />
+                                  <span>Connect</span>
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <Shield className="w-4 h-4 text-blue-600 mt-0.5" />
+                      <div className="text-xs text-blue-800">
+                        <p className="font-medium">OAuth Authentication</p>
+                        <p>Secure token-based authentication for all platform integrations.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -342,6 +441,35 @@ export default function AdminDashboard({ isOpen, onClose }: AdminDashboardProps)
             </div>
           )}
         </div>
+
+        {/* Trello OAuth Modal */}
+        {showTrelloOAuth && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h3 className="text-lg font-semibold">Connect to Trello</h3>
+                <button
+                  onClick={() => setShowTrelloOAuth(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-4">
+                <TrelloOAuthLogin
+                  onSuccess={(user) => {
+                    console.log('Trello OAuth success:', user);
+                    setShowTrelloOAuth(false);
+                    checkConnectionStatus(); // Refresh connection status
+                  }}
+                  onError={(error) => {
+                    console.error('Trello OAuth error:', error);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

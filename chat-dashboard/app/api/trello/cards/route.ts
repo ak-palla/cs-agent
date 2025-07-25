@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import TrelloApiClient, { CreateCardRequest } from '@/lib/trello-client';
+import { TrelloOAuth } from '@/lib/trello-oauth';
+import trelloLogger from '@/lib/trello-logger';
 
 /**
  * POST /api/trello/cards
@@ -7,17 +8,6 @@ import TrelloApiClient, { CreateCardRequest } from '@/lib/trello-client';
  */
 export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
     const { 
       name, 
@@ -44,9 +34,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
+    }
 
-    const cardData: CreateCardRequest = {
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
+
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
+
+    const cardData = {
       name: name.trim(),
       idList,
       ...(desc && { desc }),
@@ -57,7 +73,12 @@ export async function POST(request: NextRequest) {
       ...(urlSource && { urlSource })
     };
 
-    const newCard = await trelloClient.createCard(cardData);
+    const newCard = await oauth.makeAuthenticatedRequestWithToken(
+      'https://api.trello.com/1/cards',
+      'POST',
+      cardData,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -66,6 +87,9 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error creating Trello card:', error);
+    trelloLogger.error('Error creating Trello card', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to create card',

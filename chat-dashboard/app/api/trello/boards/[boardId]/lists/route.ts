@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import TrelloApiClient, { CreateListRequest } from '@/lib/trello-client';
+import { TrelloOAuth } from '@/lib/trello-oauth';
+import trelloLogger from '@/lib/trello-logger';
 
 /**
  * GET /api/trello/boards/[boardId]/lists
@@ -10,21 +11,42 @@ export async function GET(
   { params }: { params: Promise<{ boardId: string }> }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
+    const { boardId } = await params;
+    
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
     }
 
-    const { boardId } = await params;
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
 
-    const lists = await trelloClient.getLists(boardId);
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
+
+    const lists = await oauth.makeAuthenticatedRequestWithToken(
+      `https://api.trello.com/1/boards/${boardId}/lists?filter=open&fields=all`,
+      'GET',
+      undefined,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -34,6 +56,9 @@ export async function GET(
 
   } catch (error) {
     console.error('Error fetching Trello lists:', error);
+    trelloLogger.error('Error fetching Trello lists', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to fetch lists',
@@ -53,17 +78,6 @@ export async function POST(
   { params }: { params: Promise<{ boardId: string }> }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
-    }
-
     const { boardId } = await params;
     const body = await request.json();
     const { name, pos } = body;
@@ -75,15 +89,46 @@ export async function POST(
       );
     }
 
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
+    }
 
-    const listData: CreateListRequest = {
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
+
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
+
+    const listData = {
       name: name.trim(),
       idBoard: boardId,
       ...(pos !== undefined && { pos })
     };
 
-    const newList = await trelloClient.createList(listData);
+    const newList = await oauth.makeAuthenticatedRequestWithToken(
+      `https://api.trello.com/1/lists`,
+      'POST',
+      listData,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -92,6 +137,9 @@ export async function POST(
 
   } catch (error) {
     console.error('Error creating Trello list:', error);
+    trelloLogger.error('Error creating Trello list', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to create list',

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import TrelloApiClient, { CreateBoardRequest } from '@/lib/trello-client';
+import { TrelloOAuth } from '@/lib/trello-oauth';
+import trelloLogger from '@/lib/trello-logger';
 
 /**
  * GET /api/trello/boards/[boardId]
@@ -10,21 +11,43 @@ export async function GET(
   { params }: { params: Promise<{ boardId: string }> }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
+    const { boardId } = await params;
+    
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
     }
 
-    const { boardId } = await params;
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
 
-    const board = await trelloClient.getBoard(boardId);
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
+
+    // Fetch board details
+    const board = await oauth.makeAuthenticatedRequestWithToken(
+      `https://api.trello.com/1/boards/${boardId}?fields=all&lists=open&list_fields=all&cards=open&card_fields=all`,
+      'GET',
+      undefined,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -33,6 +56,9 @@ export async function GET(
 
   } catch (error) {
     console.error('Error fetching Trello board:', error);
+    trelloLogger.error('Error fetching Trello board', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to fetch board',
@@ -52,25 +78,40 @@ export async function PUT(
   { params }: { params: Promise<{ boardId: string }> }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
-    }
-
     const { boardId } = await params;
     const body = await request.json();
     const { name, desc, closed, prefs } = body;
 
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
+    }
+
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
+
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
 
     // Build update data
-    const updateData: Partial<CreateBoardRequest> = {};
+    const updateData: any = {};
     
     if (name !== undefined) updateData.name = name;
     if (desc !== undefined) updateData.desc = desc;
@@ -86,7 +127,12 @@ export async function PUT(
       if (prefs.background) updateData.prefs_background = prefs.background;
     }
 
-    const updatedBoard = await trelloClient.updateBoard(boardId, updateData);
+    const updatedBoard = await oauth.makeAuthenticatedRequestWithToken(
+      `https://api.trello.com/1/boards/${boardId}`,
+      'PUT',
+      updateData,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -95,6 +141,9 @@ export async function PUT(
 
   } catch (error) {
     console.error('Error updating Trello board:', error);
+    trelloLogger.error('Error updating Trello board', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to update board',
@@ -114,21 +163,42 @@ export async function DELETE(
   { params }: { params: Promise<{ boardId: string }> }
 ) {
   try {
-    const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
+    const { boardId } = await params;
 
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
+    // Get access token from cookie
+    const accessTokenCookie = request.cookies.get('trello_access_token');
+    if (!accessTokenCookie) {
+      return NextResponse.json({ 
+        error: 'Trello OAuth authentication required',
+        message: 'Please connect your Trello account first'
+      }, { status: 401 });
     }
 
-    const { boardId } = await params;
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    let accessToken;
+    try {
+      accessToken = JSON.parse(accessTokenCookie.value);
+    } catch (error) {
+      trelloLogger.error('Invalid access token format in cookie');
+      return NextResponse.json({ 
+        error: 'Invalid token format',
+        message: 'Authentication token is malformed'
+      }, { status: 401 });
+    }
 
-    await trelloClient.deleteBoard(boardId);
+    const oauth = new TrelloOAuth({
+      apiKey: process.env.NEXT_PUBLIC_TRELLO_API_KEY || '',
+      apiSecret: process.env.TRELLO_API_SECRET || '',
+      redirectUri: process.env.NEXT_PUBLIC_TRELLO_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/trello/callback',
+      scopes: ['read', 'write', 'account'],
+      expiration: 'never'
+    });
+
+    await oauth.makeAuthenticatedRequestWithToken(
+      `https://api.trello.com/1/boards/${boardId}`,
+      'DELETE',
+      undefined,
+      accessToken
+    );
 
     return NextResponse.json({
       success: true,
@@ -137,6 +207,9 @@ export async function DELETE(
 
   } catch (error) {
     console.error('Error deleting Trello board:', error);
+    trelloLogger.error('Error deleting Trello board', {
+      error: error instanceof Error ? error.message : error
+    });
     return NextResponse.json(
       { 
         error: 'Failed to delete board',

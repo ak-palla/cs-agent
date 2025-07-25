@@ -1,25 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
-import TrelloApiClient from '@/lib/trello-client';
+import TrelloApiClient, { createTrelloClient, createTrelloClientWithOAuth } from '@/lib/trello-client';
+import { createTrelloOAuth } from '@/lib/trello-oauth';
 import crypto from 'crypto';
 
 /**
  * GET /api/trello/webhooks
- * Get all webhooks for the authenticated token
+ * Get all webhooks for the authenticated token (supports OAuth and API key/token)
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
+    const apiKey = searchParams.get('apiKey');
+    const token = searchParams.get('token');
+    const useOAuth = searchParams.get('useOAuth') === 'true' || (!apiKey && !token);
 
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
+    let trelloClient: TrelloApiClient;
+
+    if (useOAuth) {
+      // Use OAuth authentication
+      try {
+        trelloClient = createTrelloClientWithOAuth();
+        
+        // Check if OAuth is authenticated
+        if (!trelloClient.isOAuthAuthenticated()) {
+          return NextResponse.json(
+            { error: 'Trello OAuth authentication required. Please connect your Trello account first.' },
+            { status: 401 }
+          );
+        }
+      } catch (error) {
+        return NextResponse.json(
+          { error: 'Trello OAuth not configured. Please set up OAuth environment variables.' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Use API key/token authentication
+      const finalApiKey = apiKey || process.env.TRELLO_API_KEY;
+      const finalToken = token || process.env.TRELLO_TOKEN;
+
+      if (!finalApiKey || !finalToken) {
+        return NextResponse.json(
+          { error: 'Trello API key and token are required for non-OAuth requests' },
+          { status: 401 }
+        );
+      }
+
+      trelloClient = createTrelloClient(finalApiKey, finalToken);
     }
 
-    const trelloClient = new TrelloApiClient(apiKey, token);
     const webhooks = await trelloClient.getWebhooks();
 
     return NextResponse.json({
@@ -42,20 +71,14 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/trello/webhooks
- * Create a new webhook for a board or card
+ * Create a new webhook for a board or card (supports OAuth and API key/token)
  */
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
-    }
+    const apiKey = searchParams.get('apiKey');
+    const token = searchParams.get('token');
+    const useOAuth = searchParams.get('useOAuth') === 'true' || (!apiKey && !token);
 
     const body = await request.json();
     const { idModel, description } = body;
@@ -67,12 +90,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let trelloClient: TrelloApiClient;
+
+    if (useOAuth) {
+      // Use OAuth authentication
+      try {
+        trelloClient = createTrelloClientWithOAuth();
+        
+        // Check if OAuth is authenticated
+        if (!trelloClient.isOAuthAuthenticated()) {
+          return NextResponse.json(
+            { error: 'Trello OAuth authentication required. Please connect your Trello account first.' },
+            { status: 401 }
+          );
+        }
+      } catch (error) {
+        return NextResponse.json(
+          { error: 'Trello OAuth not configured. Please set up OAuth environment variables.' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Use API key/token authentication
+      const finalApiKey = apiKey || process.env.TRELLO_API_KEY;
+      const finalToken = token || process.env.TRELLO_TOKEN;
+
+      if (!finalApiKey || !finalToken) {
+        return NextResponse.json(
+          { error: 'Trello API key and token are required for non-OAuth requests' },
+          { status: 401 }
+        );
+      }
+
+      trelloClient = createTrelloClient(finalApiKey, finalToken);
+    }
+
     // Construct callback URL for this deployment
     const host = request.headers.get('host');
     const protocol = request.headers.get('x-forwarded-proto') || 'http';
     const callbackURL = `${protocol}://${host}/api/trello/webhooks/callback`;
-
-    const trelloClient = new TrelloApiClient(apiKey, token);
     
     const webhook = await trelloClient.createWebhook(
       idModel, 
@@ -99,21 +155,15 @@ export async function POST(request: NextRequest) {
 
 /**
  * DELETE /api/trello/webhooks
- * Delete a webhook by ID
+ * Delete a webhook by ID (supports OAuth and API key/token)
  */
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const apiKey = searchParams.get('apiKey') || process.env.TRELLO_API_KEY;
-    const token = searchParams.get('token') || process.env.TRELLO_TOKEN;
+    const apiKey = searchParams.get('apiKey');
+    const token = searchParams.get('token');
     const webhookId = searchParams.get('webhookId');
-
-    if (!apiKey || !token) {
-      return NextResponse.json(
-        { error: 'Trello API key and token are required' },
-        { status: 401 }
-      );
-    }
+    const useOAuth = searchParams.get('useOAuth') === 'true' || (!apiKey && !token);
 
     if (!webhookId) {
       return NextResponse.json(
@@ -122,7 +172,41 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const trelloClient = new TrelloApiClient(apiKey, token);
+    let trelloClient: TrelloApiClient;
+
+    if (useOAuth) {
+      // Use OAuth authentication
+      try {
+        trelloClient = createTrelloClientWithOAuth();
+        
+        // Check if OAuth is authenticated
+        if (!trelloClient.isOAuthAuthenticated()) {
+          return NextResponse.json(
+            { error: 'Trello OAuth authentication required. Please connect your Trello account first.' },
+            { status: 401 }
+          );
+        }
+      } catch (error) {
+        return NextResponse.json(
+          { error: 'Trello OAuth not configured. Please set up OAuth environment variables.' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Use API key/token authentication
+      const finalApiKey = apiKey || process.env.TRELLO_API_KEY;
+      const finalToken = token || process.env.TRELLO_TOKEN;
+
+      if (!finalApiKey || !finalToken) {
+        return NextResponse.json(
+          { error: 'Trello API key and token are required for non-OAuth requests' },
+          { status: 401 }
+        );
+      }
+
+      trelloClient = createTrelloClient(finalApiKey, finalToken);
+    }
+
     await trelloClient.deleteWebhook(webhookId);
 
     return NextResponse.json({

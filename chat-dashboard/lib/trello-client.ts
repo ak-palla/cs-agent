@@ -2,11 +2,13 @@
  * Trello API Client
  * 
  * Provides a comprehensive interface to the Trello REST API with:
- * - Authentication management
+ * - Authentication management (OAuth 1.0a and API key/token)
  * - Rate limiting and error handling
  * - TypeScript type safety
  * - Request/response transformation
  */
+
+import { TrelloOAuth, createTrelloOAuth } from './trello-oauth';
 
 // Core Trello API types
 export interface TrelloBoard {
@@ -189,9 +191,13 @@ interface RateLimitConfig {
   retryAfterMs: number;
 }
 
+type AuthMode = 'oauth' | 'api_key';
+
 class TrelloApiClient {
-  private apiKey: string;
-  private token: string;
+  private apiKey?: string;
+  private token?: string;
+  private authMode: AuthMode;
+  private trelloOAuth?: TrelloOAuth;
   private baseUrl = 'https://api.trello.com/1';
   private rateLimit: RateLimitConfig = {
     maxRequests: 100, // Conservative limit
@@ -203,9 +209,22 @@ class TrelloApiClient {
   private requestCount = 0;
   private windowStart = Date.now();
 
-  constructor(apiKey: string, token: string) {
-    this.apiKey = apiKey;
-    this.token = token;
+  constructor(apiKey?: string, token?: string) {
+    if (apiKey && token) {
+      // API key/token mode
+      this.authMode = 'api_key';
+      this.apiKey = apiKey;
+      this.token = token;
+    } else {
+      // OAuth mode
+      this.authMode = 'oauth';
+      try {
+        this.trelloOAuth = createTrelloOAuth();
+      } catch (error) {
+        console.warn('OAuth not configured, falling back to API key mode');
+        this.authMode = 'api_key';
+      }
+    }
   }
 
   /**
@@ -273,36 +292,49 @@ class TrelloApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     return this.queueRequest(async () => {
-      const url = new URL(`${this.baseUrl}${endpoint}`);
-      url.searchParams.append('key', this.apiKey);
-      url.searchParams.append('token', this.token);
+      const fullUrl = `${this.baseUrl}${endpoint}`;
 
-      const defaultHeaders = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      };
+      if (this.authMode === 'oauth' && this.trelloOAuth) {
+        // Use OAuth authentication
+        const method = (options.method || 'GET') as 'GET' | 'POST' | 'PUT' | 'DELETE';
+        const body = options.body ? JSON.parse(options.body as string) : undefined;
+        
+        return this.trelloOAuth.makeAuthenticatedRequest<T>(fullUrl, method, body);
+      } else if (this.authMode === 'api_key' && this.apiKey && this.token) {
+        // Use API key/token authentication
+        const url = new URL(fullUrl);
+        url.searchParams.append('key', this.apiKey);
+        url.searchParams.append('token', this.token);
 
-      const response = await fetch(url.toString(), {
-        ...options,
-        headers: {
-          ...defaultHeaders,
-          ...options.headers
+        const defaultHeaders = {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        };
+
+        const response = await fetch(url.toString(), {
+          ...options,
+          headers: {
+            ...defaultHeaders,
+            ...options.headers
+          }
+        });
+
+        if (!response.ok) {
+          let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch {
+            // Use default error message if JSON parsing fails
+          }
+
+          throw new Error(errorMessage);
         }
-      });
 
-      if (!response.ok) {
-        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorData.error || errorMessage;
-        } catch {
-          // Use default error message if JSON parsing fails
-        }
-
-        throw new Error(errorMessage);
+        return response.json();
+      } else {
+        throw new Error('No valid authentication method configured');
       }
-
-      return response.json();
     });
   }
 
@@ -502,7 +534,17 @@ class TrelloApiClient {
   }
 
   async getWebhooks(): Promise<TrelloWebhook[]> {
-    return this.makeRequest<TrelloWebhook[]>(`/tokens/${this.token}/webhooks`);
+    if (this.authMode === 'oauth' && this.trelloOAuth) {
+      const accessToken = this.trelloOAuth.getStoredAccessToken();
+      if (!accessToken) {
+        throw new Error('No OAuth token available');
+      }
+      return this.makeRequest<TrelloWebhook[]>(`/tokens/${accessToken.oauth_token}/webhooks`);
+    } else if (this.token) {
+      return this.makeRequest<TrelloWebhook[]>(`/tokens/${this.token}/webhooks`);
+    } else {
+      throw new Error('No token available for webhook retrieval');
+    }
   }
 
   async deleteWebhook(webhookId: string): Promise<void> {
@@ -546,8 +588,96 @@ class TrelloApiClient {
 
   // Update authentication
   updateAuth(apiKey: string, token: string): void {
+    this.authMode = 'api_key';
     this.apiKey = apiKey;
     this.token = token;
+    this.trelloOAuth = undefined;
+  }
+
+  // OAuth authentication methods
+  
+  /**
+   * Check if OAuth is configured and user is authenticated
+   */
+  isOAuthAuthenticated(): boolean {
+    return this.authMode === 'oauth' && this.trelloOAuth ? this.trelloOAuth.isAuthenticated() : false;
+  }
+
+  /**
+   * Get OAuth authentication status
+   */
+  getAuthStatus(): { mode: AuthMode; authenticated: boolean; user?: any } {
+    if (this.authMode === 'oauth' && this.trelloOAuth) {
+      return {
+        mode: 'oauth',
+        authenticated: this.trelloOAuth.isAuthenticated()
+      };
+    } else {
+      return {
+        mode: 'api_key',
+        authenticated: !!(this.apiKey && this.token)
+      };
+    }
+  }
+
+  /**
+   * Get current user using OAuth
+   */
+  async getCurrentOAuthUser() {
+    if (this.authMode === 'oauth' && this.trelloOAuth) {
+      return this.trelloOAuth.getCurrentUser();
+    }
+    throw new Error('OAuth not configured or not in OAuth mode');
+  }
+
+  /**
+   * Clear OAuth authentication
+   */
+  clearOAuthAuth(): void {
+    if (this.trelloOAuth) {
+      this.trelloOAuth.clearStoredToken();
+    }
+  }
+
+  /**
+   * Switch to OAuth mode
+   */
+  switchToOAuth(): void {
+    this.authMode = 'oauth';
+    this.apiKey = undefined;
+    this.token = undefined;
+    try {
+      this.trelloOAuth = createTrelloOAuth();
+    } catch (error) {
+      throw new Error('Failed to initialize OAuth: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
+  }
+}
+
+// Factory functions for different authentication modes
+
+/**
+ * Create TrelloApiClient with API key/token authentication
+ */
+export function createTrelloClientWithApiKey(apiKey: string, token: string): TrelloApiClient {
+  return new TrelloApiClient(apiKey, token);
+}
+
+/**
+ * Create TrelloApiClient with OAuth authentication
+ */
+export function createTrelloClientWithOAuth(): TrelloApiClient {
+  return new TrelloApiClient();
+}
+
+/**
+ * Create TrelloApiClient with automatic authentication detection
+ */
+export function createTrelloClient(apiKey?: string, token?: string): TrelloApiClient {
+  if (apiKey && token) {
+    return new TrelloApiClient(apiKey, token);
+  } else {
+    return new TrelloApiClient();
   }
 }
 

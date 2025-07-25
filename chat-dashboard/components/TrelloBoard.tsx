@@ -25,10 +25,9 @@ import {
 } from '@dnd-kit/sortable';
 
 interface TrelloBoardProps {
-  apiKey: string;
-  token: string;
   boardId?: string;
   onBoardChange?: (board: TrelloBoardType) => void;
+  useOAuth?: boolean;
 }
 
 interface CreateCardForm {
@@ -42,7 +41,7 @@ interface CreateListForm {
   name: string;
 }
 
-export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: TrelloBoardProps) {
+export default function TrelloBoard({ boardId, onBoardChange, useOAuth = true }: TrelloBoardProps) {
   // State management
   const [board, setBoard] = useState<TrelloBoardType | null>(null);
   const [boards, setBoards] = useState<TrelloBoardType[]>([]);
@@ -95,27 +94,56 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/trello/boards?apiKey=${apiKey}&token=${token}`);
+      const url = '/api/trello/boards';
+      console.log('🔍 Fetching boards from:', url);
+      
+      const response = await fetch(url, {
+        credentials: 'include' // Include cookies with the request
+      });
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response ok:', response.ok);
+      
       const data = await response.json();
+      console.log('📦 Response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch boards');
+        console.warn('⚠️ Response not OK:', response.status, data);
+        
+        // Handle 401 (unauthorized) gracefully
+        if (response.status === 401) {
+          console.log('🔒 401 Unauthorized - clearing boards');
+          setBoards([]);
+          return;
+        }
+        
+        // Handle 500 errors
+        if (response.status >= 500) {
+          console.error('🔥 Server error:', response.status, data);
+          setError(`Server error: ${response.status} - ${data.error || 'Unknown server error'}`);
+          return;
+        }
+        
+        // Handle other errors
+        setError(data.error || `Error: ${response.status} - ${response.statusText}`);
+        return;
       }
 
+      console.log('✅ Boards fetched successfully:', data.data?.length || 0, 'boards');
       setBoards(data.data || []);
       
       // If no boardId is selected and we have boards, select the first one
       if (!selectedBoardId && data.data && data.data.length > 0) {
+        console.log('🎯 Auto-selecting first board:', data.data[0].name);
         setSelectedBoardId(data.data[0].id);
       }
 
     } catch (err) {
-      console.error('Error fetching boards:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch boards');
+      console.error('💥 Exception in fetchBoards:', err);
+      setError(`Network error: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
-  }, [apiKey, token, selectedBoardId]);
+  }, [selectedBoardId]);
 
   /**
    * Fetch a specific board with its lists and cards
@@ -127,7 +155,10 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/trello/boards/${boardIdToFetch}?apiKey=${apiKey}&token=${token}`);
+      const url = `/api/trello/boards/${boardIdToFetch}`;
+      const response = await fetch(url, {
+        credentials: 'include' // Include cookies with the request
+      });
       const data = await response.json();
 
       if (!response.ok) {
@@ -135,14 +166,26 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
       }
 
       console.log('Board data received:', data.data);
-      console.log('Lists with cards:', data.data.lists?.map(list => ({
+      console.log('Lists:', data.data.lists?.length, 'lists');
+      console.log('Cards:', data.data.cards?.length, 'total cards');
+      
+      // Associate cards with their lists
+      const processedBoard = {
+        ...data.data,
+        lists: (data.data.lists || []).map(list => ({
+          ...list,
+          cards: (data.data.cards || []).filter(card => card.idList === list.id)
+        }))
+      };
+      
+      console.log('Processed lists with cards:', processedBoard.lists?.map(list => ({
         name: list.name,
         cardCount: list.cards?.length || 0,
         cards: list.cards?.map(card => card.name) || []
       })));
       
-      setBoard(data.data);
-      onBoardChange?.(data.data);
+      setBoard(processedBoard);
+      onBoardChange?.(processedBoard);
 
     } catch (err) {
       console.error('Error fetching board:', err);
@@ -150,7 +193,7 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
     } finally {
       setLoading(false);
     }
-  }, [apiKey, token, onBoardChange]);
+  }, [useOAuth, onBoardChange]);
 
   /**
    * Create a new list
@@ -159,7 +202,8 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
     if (!selectedBoardId || !createListForm.name.trim()) return;
 
     try {
-      const response = await fetch(`/api/trello/boards/${selectedBoardId}/lists?apiKey=${apiKey}&token=${token}`, {
+      const url = useOAuth ? `/api/trello/boards/${selectedBoardId}/lists?useOAuth=true` : `/api/trello/boards/${selectedBoardId}/lists`;
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: createListForm.name.trim() })
@@ -196,7 +240,8 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
         ...(createCardForm.due && { due: new Date(createCardForm.due).toISOString() })
       };
 
-      const response = await fetch(`/api/trello/cards?apiKey=${apiKey}&token=${token}`, {
+      const url = '/api/trello/cards';
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cardData)
@@ -224,7 +269,8 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
    */
   const moveCard = async (cardId: string, newListId: string) => {
     try {
-      const response = await fetch(`/api/trello/cards/${cardId}?apiKey=${apiKey}&token=${token}`, {
+      const url = useOAuth ? `/api/trello/cards/${cardId}?useOAuth=true` : `/api/trello/cards/${cardId}`;
+      const response = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idList: newListId })
@@ -431,7 +477,7 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
   const getSearchStats = () => {
     if (!board?.lists || !searchQuery.trim()) return null;
     
-    const allCards = board.lists.flatMap(list => list.cards || []);
+    const allCards = (board.lists || []).flatMap(list => list.cards || []);
     const filteredCards = filterCards(allCards);
     
     return {
@@ -471,10 +517,10 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
     });
     
     // Add label suggestions
-    const allLabels = board.lists.flatMap(list => 
-      list.cards?.flatMap(card => card.labels) || []
+    const allLabels = (board.lists || []).flatMap(list => 
+      (list.cards || []).flatMap(card => card.labels || []) || []
     );
-    const uniqueLabels = Array.from(new Set(allLabels.map(l => l.name)))
+    const uniqueLabels = Array.from(new Set(allLabels.map(l => l.name || '')))
       .filter(name => name && name.toLowerCase().includes(query));
     
     uniqueLabels.slice(0, 3).forEach(labelName => {
@@ -488,16 +534,18 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
     // Add member suggestions
     const allMembers = board.members || [];
     const matchingMembers = allMembers.filter(member => 
-      member.fullName.toLowerCase().includes(query) || 
-      member.username.toLowerCase().includes(query)
+      member?.fullName?.toLowerCase().includes(query) || 
+      member?.username?.toLowerCase().includes(query)
     );
     
     matchingMembers.slice(0, 3).forEach(member => {
-      suggestions.push({ 
-        type: 'member', 
-        text: member.fullName, 
-        description: `Member: ${member.fullName}` 
-      });
+      if (member?.fullName) {
+        suggestions.push({ 
+          type: 'member', 
+          text: member.fullName, 
+          description: `Member: ${member.fullName}` 
+        });
+      }
     });
     
     return suggestions.slice(0, 8);
@@ -509,29 +557,29 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
   const filterBoards = (boardsList: TrelloBoardType[], query: string): TrelloBoardType[] => {
     if (!query.trim()) {
       // Sort by last activity when no search query
-      return boardsList.sort((a, b) => 
+      return [...boardsList].sort((a, b) => 
         new Date(b.dateLastActivity).getTime() - new Date(a.dateLastActivity).getTime()
       );
     }
     
     const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
     
-    const filteredBoards = boardsList.filter(board => {
+    const filteredBoards = (boardsList || []).filter(board => {
       // Search in board name
       const nameMatches = searchTerms.every(term => 
-        board.name.toLowerCase().includes(term)
+        (board.name || '').toLowerCase().includes(term)
       );
       
       // Search in board description
       const descMatches = searchTerms.every(term => 
-        board.desc.toLowerCase().includes(term)
+        (board.desc || '').toLowerCase().includes(term)
       );
       
       // Search in member names
       const memberMatches = searchTerms.some(term => 
-        board.members.some(member => 
-          member.fullName.toLowerCase().includes(term) || 
-          member.username.toLowerCase().includes(term)
+        (board.members || []).some(member => 
+          (member?.fullName || '').toLowerCase().includes(term) || 
+          (member?.username || '').toLowerCase().includes(term)
         )
       );
       
@@ -544,7 +592,7 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
     });
     
     // Sort filtered results by relevance (name matches first, then by last activity)
-    return filteredBoards.sort((a, b) => {
+    return [...filteredBoards].sort((a, b) => {
       const aNameMatch = searchTerms.every(term => a.name.toLowerCase().includes(term));
       const bNameMatch = searchTerms.every(term => b.name.toLowerCase().includes(term));
       
@@ -560,7 +608,7 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
    * Get filtered boards for display
    */
   const getFilteredBoards = () => {
-    return filterBoards(boards, boardSearchQuery);
+    return filterBoards(boards || [], boardSearchQuery);
   };
 
   /**
@@ -609,10 +657,34 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
 
   // Effects
   useEffect(() => {
-    if (apiKey && token) {
-      fetchBoards();
-    }
-  }, [apiKey, token, fetchBoards]);
+    console.log('🚀 TrelloBoard mounted, checking authentication...');
+    
+    // Only fetch boards when authenticated
+    const checkAuthAndFetch = async () => {
+      try {
+        console.log('🔐 Checking authentication via /api/trello/me...');
+        const authResponse = await fetch('/api/trello/me');
+        console.log('🔐 Auth check response:', authResponse.status);
+        
+        if (authResponse.ok) {
+          console.log('✅ User authenticated, fetching boards...');
+          await fetchBoards();
+        } else {
+          console.log('❌ User not authenticated, skipping board fetch');
+          setError(null);
+          setLoading(false);
+          setBoards([]);
+        }
+      } catch (error) {
+        console.error('💥 Error in authentication check:', error);
+        setError(null);
+        setLoading(false);
+        setBoards([]);
+      }
+    };
+
+    checkAuthAndFetch();
+  }, [fetchBoards]);
 
   useEffect(() => {
     if (selectedBoardId) {
@@ -752,23 +824,23 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
                               <div className="text-xs text-gray-500 truncate mt-0.5">{boardItem.desc}</div>
                             )}
                             <div className="flex items-center space-x-3 mt-1 text-xs text-gray-400">
-                              <span>{boardItem.members.length} members</span>
+                              <span>{boardItem.members?.length || 0} members</span>
                               <span>{new Date(boardItem.dateLastActivity).toLocaleDateString()}</span>
                             </div>
                           </div>
                           <div className="flex items-center space-x-1 ml-2">
-                            {boardItem.members.slice(0, 3).map(member => (
+                            {(boardItem.members || []).slice(0, 3).map(member => (
                               <div
                                 key={member.id}
                                 className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs font-medium text-white"
                                 title={member.fullName}
                               >
-                                {member.initials}
+                                {member.initials || member.username?.charAt(0).toUpperCase() || '?'}
                               </div>
                             ))}
-                            {boardItem.members.length > 3 && (
+                            {(boardItem.members?.length || 0) > 3 && (
                               <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
-                                +{boardItem.members.length - 3}
+                                +{(boardItem.members.length || 0) - 3}
                               </div>
                             )}
                           </div>
@@ -796,18 +868,18 @@ export default function TrelloBoard({ apiKey, token, boardId, onBoardChange }: T
           {board && board.members && board.members.length > 0 && (
             <div className="flex items-center space-x-3">
               <div className="flex -space-x-3">
-                {board.members.slice(0, 4).map(member => (
+                {(board.members || []).slice(0, 4).map(member => member && (
                   <div
                     key={member.id}
                     className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold text-white border-3 border-white border-opacity-30 shadow-lg backdrop-blur-sm"
-                    title={member.fullName}
+                    title={member.fullName || member.username || 'Unknown'}
                   >
-                    {member.initials}
+                    {member.initials || member.username?.charAt(0).toUpperCase() || '?'}
                   </div>
-                ))}
-                {board.members.length > 4 && (
+                )).filter(Boolean)}
+                {(board.members?.length || 0) > 4 && (
                   <div className="w-10 h-10 rounded-full bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center text-sm font-medium border-3 border-white border-opacity-30 shadow-lg">
-                    +{board.members.length - 4}
+                    +{(board.members.length || 0) - 4}
                   </div>
                 )}
               </div>
