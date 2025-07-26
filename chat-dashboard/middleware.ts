@@ -1,7 +1,15 @@
 import { updateSession } from "@/lib/supabase/middleware";
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  // Skip middleware for webhook routes completely
+  const pathname = request.nextUrl.pathname;
+  if (pathname.startsWith('/api/flock/webhook') || 
+      pathname.startsWith('/webhook/') || 
+      pathname === '/flock-webhook') {
+    return NextResponse.next();
+  }
+  
   return await updateSession(request);
 }
 
