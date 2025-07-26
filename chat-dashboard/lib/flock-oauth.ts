@@ -59,7 +59,7 @@ export class FlockOAuth {
       params.append('state', state);
     }
 
-    const authUrl = `${this.config.serverUrl}/oauth/v2/authorize?${params.toString()}`;
+    const authUrl = `${this.config.serverUrl}/v1/oauth/authorize?${params.toString()}`;
     flockLogger.info('Generated Flock OAuth authorization URL', { 
       authUrl: authUrl.replace(this.config.clientId, '***CLIENT_ID***') 
     });
@@ -78,7 +78,7 @@ export class FlockOAuth {
         code: code.substring(0, 8) + '...' 
       });
 
-      const tokenUrl = `${this.config.serverUrl}/oauth/v2/token`;
+      const tokenUrl = `${this.config.serverUrl}/v1/oauth/token`;
       const params = new URLSearchParams({
         grant_type: 'authorization_code',
         client_id: this.config.clientId,
@@ -200,7 +200,7 @@ export class FlockOAuth {
     try {
       flockLogger.info('Refreshing Flock access token');
 
-      const tokenUrl = `${this.config.serverUrl}/oauth/v2/token`;
+      const tokenUrl = `${this.config.serverUrl}/v1/oauth/token`;
       const params = new URLSearchParams({
         grant_type: 'refresh_token',
         client_id: this.config.clientId,
@@ -328,8 +328,8 @@ export const createFlockOAuth = (): FlockOAuth => {
   const config: FlockOAuthConfig = {
     clientId: process.env.NEXT_PUBLIC_FLOCK_CLIENT_ID || '',
     clientSecret: process.env.FLOCK_CLIENT_SECRET || '',
-    serverUrl: process.env.NEXT_PUBLIC_FLOCK_URL || 'https://api.flock.co',
-    redirectUri: process.env.NEXT_PUBLIC_FLOCK_OAUTH_REDIRECT_URI || `${typeof window !== 'undefined' ? window.location.origin : 'https://localhost:3000'}/auth/flock/callback`,
+    serverUrl: process.env.NEXT_PUBLIC_FLOCK_URL || 'https://api.flock.com',
+    redirectUri: process.env.NEXT_PUBLIC_FLOCK_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/flock/callback',
     scopes: ['openid', 'profile', 'email', 'chat:read', 'chat:write'],
   };
 
@@ -337,6 +337,18 @@ export const createFlockOAuth = (): FlockOAuth => {
     flockLogger.error('NEXT_PUBLIC_FLOCK_CLIENT_ID environment variable is required');
     throw new Error('Flock OAuth client ID is required');
   }
+
+  if (!config.clientSecret) {
+    flockLogger.error('FLOCK_CLIENT_SECRET environment variable is required');
+    throw new Error('Flock OAuth client secret is required');
+  }
+
+  flockLogger.info('FlockOAuth configuration validated', {
+    hasClientId: !!config.clientId,
+    hasClientSecret: !!config.clientSecret,
+    serverUrl: config.serverUrl,
+    redirectUri: config.redirectUri
+  });
 
   return new FlockOAuth(config);
 };

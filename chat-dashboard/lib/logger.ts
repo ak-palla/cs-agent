@@ -168,5 +168,6 @@ export const dashboardLogger = Logger.getInstance('DASHBOARD');
 export const botLogger = Logger.getInstance('BOT');
 export const webhookLogger = Logger.getInstance('WEBHOOK');
 export const metricsLogger = Logger.getInstance('METRICS');
+export const flockLogger = Logger.getInstance('FLOCK');
 
 export default Logger;
