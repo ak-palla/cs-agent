@@ -57,7 +57,7 @@ export class EnhancedFlockApiClient {
     this.appSecret = options.appSecret || '';
     this.accessToken = options.accessToken || null;
     this.useOAuth = options.useOAuth || false;
-    this.baseUrl = options.baseUrl || 'https://api.flock.co';
+    this.baseUrl = options.baseUrl || 'https://api.flock.com';
     this.rateLimiter = new RateLimiter();
 
     flockLogger.info('EnhancedFlockApiClient initialized', {

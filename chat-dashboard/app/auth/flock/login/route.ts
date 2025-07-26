@@ -14,45 +14,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const redirectUrl = searchParams.get('redirect') || '/flock';
 
-    flockLogger.info('Initiating Flock OAuth login', { redirectUrl });
+    flockLogger.info('Flock app installed - using token-based flow', { redirectUrl });
 
-    // Initialize OAuth client
-    const oauth = createFlockOAuth();
-
-    // Generate state parameter for security
-    const state = oauth.generateState();
-
-    // Generate authorization URL
-    const authUrl = oauth.getAuthorizationUrl(state);
-
-    flockLogger.info('Generated Flock OAuth URL with state', {
-      state: state.substring(0, 8) + '...',
-      redirectUrl,
-      duration: Date.now() - startTime
-    });
-
-    // Create response with redirect to Flock OAuth
-    const response = NextResponse.redirect(authUrl);
-
-    // Set state cookie for validation during callback
-    response.cookies.set('flock_oauth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 10, // 10 minutes
-      path: '/',
-    });
-
-    // Store redirect URL in cookie for post-auth redirect
-    response.cookies.set('flock_oauth_redirect', redirectUrl, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 10, // 10 minutes
-      path: '/',
-    });
-
-    return response;
+    // For installed apps, redirect to simple token flow
+    const simpleAuthUrl = new URL('/api/flock/simple-auth', request.url);
+    simpleAuthUrl.searchParams.set('redirect', redirectUrl);
+    
+    return NextResponse.redirect(simpleAuthUrl);
 
   } catch (error) {
     const duration = Date.now() - startTime;

@@ -52,14 +52,14 @@ export class FlockOAuth {
       response_type: 'code',
       client_id: this.config.clientId,
       redirect_uri: this.config.redirectUri,
-      scope: this.config.scopes?.join(' ') || 'openid profile email',
+      scope: this.config.scopes?.join(' ') || 'chat:read chat:write',
     });
 
     if (state) {
       params.append('state', state);
     }
 
-    const authUrl = `${this.config.serverUrl}/v1/oauth/authorize?${params.toString()}`;
+    const authUrl = `${this.config.serverUrl}/oauth/v2/authorize?${params.toString()}`;
     flockLogger.info('Generated Flock OAuth authorization URL', { 
       authUrl: authUrl.replace(this.config.clientId, '***CLIENT_ID***') 
     });
@@ -78,7 +78,7 @@ export class FlockOAuth {
         code: code.substring(0, 8) + '...' 
       });
 
-      const tokenUrl = `${this.config.serverUrl}/v1/oauth/token`;
+      const tokenUrl = `${this.config.serverUrl}/oauth/token`;
       const params = new URLSearchParams({
         grant_type: 'authorization_code',
         client_id: this.config.clientId,
@@ -141,9 +141,8 @@ export class FlockOAuth {
     try {
       flockLogger.info('Fetching current Flock user information');
 
-      const response = await fetch(`${this.config.serverUrl}/api/v1/users/me`, {
+      const response = await fetch(`${this.config.serverUrl}/v1/users.getInfo?token=${accessToken}`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -162,15 +161,17 @@ export class FlockOAuth {
 
       const userData = await response.json();
       
+      // Handle Flock API response structure
+      const userInfo = userData.data || userData;
       const user: FlockUser = {
-        id: userData.id,
-        userId: userData.userId,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        profileImage: userData.profileImage,
-        timezone: userData.timezone,
-        locale: userData.locale,
+        id: userInfo.userId || userInfo.id,
+        userId: userInfo.userId || userInfo.id,
+        firstName: userInfo.firstName || userInfo.name?.split(' ')[0] || 'Unknown',
+        lastName: userInfo.lastName || userInfo.name?.split(' ')[1] || '',
+        email: userInfo.email || '',
+        profileImage: userInfo.profileImage || '',
+        timezone: userInfo.timezone || 'UTC',
+        locale: userInfo.locale || 'en-US',
       };
       
       flockLogger.info('Flock user fetched successfully', {
@@ -200,7 +201,7 @@ export class FlockOAuth {
     try {
       flockLogger.info('Refreshing Flock access token');
 
-      const tokenUrl = `${this.config.serverUrl}/v1/oauth/token`;
+      const tokenUrl = `${this.config.serverUrl}/oauth/token`;
       const params = new URLSearchParams({
         grant_type: 'refresh_token',
         client_id: this.config.clientId,
@@ -330,7 +331,7 @@ export const createFlockOAuth = (): FlockOAuth => {
     clientSecret: process.env.FLOCK_CLIENT_SECRET || '',
     serverUrl: process.env.NEXT_PUBLIC_FLOCK_URL || 'https://api.flock.com',
     redirectUri: process.env.NEXT_PUBLIC_FLOCK_OAUTH_REDIRECT_URI || 'https://localhost:3000/auth/flock/callback',
-    scopes: ['openid', 'profile', 'email', 'chat:read', 'chat:write'],
+    scopes: ['chat:read', 'chat:write'],
   };
 
   if (!config.clientId) {

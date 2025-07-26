@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
 
     // Updated list of Flock API base URLs based on current platform structure
     const baseUrls = [
-      'https://api.flock.co/v1',            // Main API - confirmed working
-      'https://dev.flock.co/api/v1',        // Developer API
+      'https://api.flock.com/v1',            // Main API - updated to .com
+      'https://dev.flock.com/api/v1',        // Developer API - updated to .com
     ];
 
     // Test endpoints

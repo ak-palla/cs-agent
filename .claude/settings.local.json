@@ -25,7 +25,8 @@
       "Bash(pkill:*)",
       "Bash(true)",
       "Bash(grep:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(vercel:*)"
     ],
     "deny": []
   }

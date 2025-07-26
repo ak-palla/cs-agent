@@ -1,0 +1,80 @@
+# tactiq.io free youtube transcript
+# No title found
+# https://www.youtube.com/watch/-IR4ojI8QMM
+
+00:00:00.599 introducing flock OS the world's first
+00:00:03.399 chat operating
+00:00:04.920 system flock OS enables developers to
+00:00:07.759 build apps Bots and Integrations on top
+00:00:10.240 of flock the number one team
+00:00:12.639 messenger apps are a first class citizen
+00:00:15.200 in flock apps built on flock can not
+00:00:18.039 only send
+00:00:19.119 messages but also send Rich
+00:00:21.800 attachments insert different types of
+00:00:25.640 buttons load
+00:00:28.240 witchs and deploy box
+00:00:32.238 here's a quick look at flock platform
+00:00:34.000 capabilities starting with
+00:00:36.440 notifications apps can send
+00:00:38.160 notifications directly into flock by
+00:00:40.600 simply sending an HTTP request to our
+00:00:42.960 API endpoint this can help notify
+00:00:45.760 individuals or channels about specific
+00:00:48.039 updates for example a GitHub app can
+00:00:51.120 send a message to a channel whenever
+00:00:52.920 someone opens an issue a Trello app can
+00:00:55.600 notify the project manager whenever a
+00:00:58.079 card is created or moved notifications
+00:01:01.160 help users get realtime updates on
+00:01:03.160 information they value the most flock OS
+00:01:06.720 offers deep integration into the flock
+00:01:09.960 UI apps can add buttons to
+00:01:13.159 attachments chat
+00:01:15.320 tabs the attachment pick a
+00:01:18.560 bar and the app launcher bar these
+00:01:21.880 buttons can be used to launch widgets
+00:01:24.479 for example the Cod snippet app has an
+00:01:27.079 attachment picker button which on
+00:01:29.240 clicking open opens a modal widget where
+00:01:31.200 users can enter
+00:01:34.159 code similarly the to-do app provides an
+00:01:37.399 app launcher button which can be used to
+00:01:39.680 launch the to-do sidebar widget buttons
+00:01:42.960 and widgets are platform agnostic and
+00:01:45.560 can be used in both flock desktop and
+00:01:47.680 flock mobile clients for example here is
+00:01:51.560 the attachment picker button for the
+00:01:53.119 notes app in the mobile
+00:01:56.719 client buttons can also be used to
+00:01:59.159 trigger messages
+00:02:00.479 or launch a browser outside
+00:02:02.770 [Music]
+00:02:04.560 flock besides buttons users can also
+00:02:07.560 interact with your app using the app's
+00:02:09.758 dedicated SL command once the command is
+00:02:12.720 executed your app can respond in any way
+00:02:15.239 you want it to send messages open
+00:02:18.239 Widgets or launch browser
+00:02:22.440 instances each app also gets a dedicated
+00:02:25.239 bot to send and receive messages to
+00:02:27.200 users and channels like this reminder
+00:02:29.200 bot
+00:02:31.519 which sends notifications for tasks to
+00:02:33.440 be
+00:02:38.680 done with URL previews when a user types
+00:02:42.200 a URL your app can show a preview for
+00:02:44.760 that so if a user enters a Google Drive
+00:02:47.720 Link a Google Drive app can show a
+00:02:50.159 preview for that link including the
+00:02:52.440 document name type Etc URL previews help
+00:02:56.599 make the URL that much more relevant for
+00:02:58.760 your users creating apps has never been
+00:03:02.480 easier just fire up your developer
+00:03:05.239 dashboard register your
+00:03:08.120 app and publish it just for your team or
+00:03:11.400 the entire flock
+00:03:13.040 Universe with the flock OS our entire UI
+00:03:16.760 is your canvas so what will you build
+00:03:20.350 [Music]
+00:03:25.560 today

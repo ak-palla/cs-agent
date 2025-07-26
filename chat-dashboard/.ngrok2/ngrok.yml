@@ -1,0 +1,9 @@
+authtoken: 30POKYN477QiUAx4sp0qL6so30D_3rzzvvL6nVmeX1xaY3NXV
+region: us
+log_level: info
+log: /tmp/ngrok.log
+tunnels:
+  flock-app:
+    proto: http
+    addr: 3000
+    hostname: flock-integration.ngrok.io

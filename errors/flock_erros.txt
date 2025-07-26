@@ -1,0 +1,57 @@
+{
+  "baseUrl": "https://api.flock.com",
+  "clientId": "***SET***",
+  "endpoints": [
+    {
+      "endpoint": "https://api.flock.com/oauth/authorize",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/oauth/token",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/v1/oauth/authorize",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/v1/oauth/token",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/oauth/v2/authorize",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/oauth/v2/token",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/users.getInfo",
+      "status": 404,
+      "statusText": "Not Found",
+      "ok": false
+    },
+    {
+      "endpoint": "https://api.flock.com/v1/users.getInfo",
+      "status": 403,
+      "statusText": "Forbidden",
+      "ok": false
+    }
+  ],
+  "recommended": {
+    "auth": "https://api.flock.com/oauth/authorize?response_type=code&client_id=03bc24fd-6b91-4dca-a517-09f716f0e857&redirect_uri=https://localhost:3000/auth/flock/callback&scope=chat:read chat:write"
+  }
+}

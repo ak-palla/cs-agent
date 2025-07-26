@@ -1,0 +1,9 @@
+
+> dev
+> node scripts/setup-ssl.js && node server.js
+
+✅ SSL certificates already exist
+SSL certificates are ready at:
+Key: /mnt/d/CS_Agent/chat-dashboard/certs/localhost-key.pem
+Cert: /mnt/d/CS_Agent/chat-dashboard/certs/localhost.pem
+Bus error (core dumped)
