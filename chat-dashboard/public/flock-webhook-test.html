@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flock Webhook Test</title>
+</head>
+<body>
+    <h1>FLOCK_WEBHOOK_VALIDATION_OK</h1>
+    <p>This endpoint is working and accessible.</p>
+    <script>
+        // Handle challenge parameter if needed
+        const urlParams = new URLSearchParams(window.location.search);
+        const challenge = urlParams.get('challenge') || urlParams.get('hub.challenge');
+        if (challenge) {
+            document.body.innerHTML = challenge;
+        }
+    </script>
+</body>
+</html>
